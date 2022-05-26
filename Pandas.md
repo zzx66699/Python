@@ -4,8 +4,8 @@ import pandas as pd                 # Import the pandas package for data frames
 ```
 
 # pandas.Series
-## 构建转变
 一维的索引数组 one-dimensional array of indexed data  
+## 构建转变
 可以从其它的一维数组创建而来，包括list和一维numpy.array  
 ``` python
 wage = pd.Series([3.10, 3.24, 3.00])                        # 从list转变
@@ -118,3 +118,52 @@ print(wage.loc[-2:])                                           # Print the last 
 dtype: float64
 ```
 
+# pandas.DataFrame
+二维的索引数组 one-dimensional array of indexed data  
+## 构建转变
+可以从其它的二维数组创建而来，包括dictionary和二维numpy.array  
+``` python
+data_dict = {'wage': [3.10, 3.24, 3.00, 6.00, 5.30, 8.75],                      # 字典里的key变成了每一列的index，每一行的index自动生成
+             'educ': [11.0, 12.0, 11.0, 8.0, 12.0, 16.0],
+             'exper': [2.0, 22.0, 2.0, 44.0, 7.0, 9.0],
+             'gender': ['Female', 'Female', 'Male', 'Male', 'Male', 'Male'],
+             'married': [False, True, False, True, True, True]}
+
+data_frame = pd.DataFrame(data_dict)    # Create a DataFrame object
+data_frame                              # Display the DataFrame
+
+
+wage	educ	exper	gender	married
+0	3.10	11.0	2.0	Female	False
+1	3.24	12.0	22.0	Female	True
+2	3.00	11.0	2.0	Male	False
+3	6.00	8.0	44.0	Male	True
+4	5.30	12.0	7.0	Male	True
+5	8.75	16.0	9.0	Male	True
+
+# 也可以在构建时设立index
+index = ['Mary', 'Ann', 'John', 'David', 'Frank', 'Ben']
+data_frame_new = pd.DataFrame(data_dict, index=index)  
+
+wage	educ	exper	gender	married
+Mary	3.10	11.0	2.0	Female	False
+Ann	3.24	12.0	22.0	Female	True
+John	3.00	11.0	2.0	Male	False
+David	6.00	8.0	44.0	Male	True
+Frank	5.30	12.0	7.0	Male	True
+Ben	8.75	16.0	9.0	Male	True
+```
+## 切片
+``` python
+wage = data_frame['wage']              # Access one column
+wage ---
+0    3.10
+1    3.24
+2    3.00
+3    6.00
+4    5.30
+5    8.75
+Name: wage, dtype: float64
+
+wage = data_frame['']
+```
