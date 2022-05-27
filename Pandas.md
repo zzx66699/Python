@@ -182,7 +182,7 @@ data_frame['wage':'married']                 # 不可以直接用label-based切�
 cannot do slice indexing on RangeIndex with these indexers [wage] of type str
 ```
 
-**方法二：用loc/iloc**
+**方法二：用loc/iloc**  
 提取单独几列的时候会比较麻烦 但好在可以切片   
 只要切列了 就必须加上,:
 ``` python
