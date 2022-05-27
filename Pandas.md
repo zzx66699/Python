@@ -308,3 +308,71 @@ David	6.00
 Frank	5.30
 Ben	  8.75
 ```
+
+## 替换modify&增加
+直接选取 赋值
+``` python
+data_frame
+  wage	educ	exper	gender	married
+0	3.10	11.0	2.0	Female	False
+1	3.24	12.0	22.0	Female	True
+2	3.00	11.0	2.0	Male	False
+3	6.00	8.0	44.0	Male	True
+4	5.30	12.0	7.0	Male	True
+5	8.75	16.0	9.0	Male	True
+
+data_frame.loc[2,'educ'] = 9
+data_frame
+  wage	educ	exper	gender	married
+0	3.10	11.0	2.0	Female	False
+1	3.24	12.0	22.0	Female	True
+2	3.00	9.0	2.0	Male	False
+3	6.00	8.0	44.0	Male	True
+4	5.30	12.0	7.0	Male	True
+5	8.75	16.0	9.0	Male	True
+
+data_frame.loc[:,'happiness'] = 'none'
+data_frame
+  wage	educ	exper	gender	married	happiness
+0	3.10	11.0	2.0	Female	False	none
+1	3.24	12.0	22.0	Female	True	none
+2	3.00	9.0	2.0	Male	False	none
+3	6.00	8.0	44.0	Male	True	none
+4	5.30	12.0	7.0	Male	True	none
+5	8.75	16.0	9.0	Male	True	none
+```
+
+## boolean pandas.Series
+### 单一判断
+``` python
+is_female = data_frame['gender'] == 'Female'      
+is_female
+0     True
+1     True
+2    False
+3    False
+4    False
+5    False
+Name: gender, dtype: bool
+
+is_high_wage = data_frame['wage'] > 4
+is_high_wage
+0    False
+1    False
+2    False
+3     True
+4     True
+5     True
+Name: wage, dtype: bool
+```
+### 多条件判断 | 和 &
+``` python
+# Intersection of two conditions: True if both of them are True
+is_wife = (data_frame['gender']=='Female') & (data_frame['married'])
+
+# Union of two conditions: True if either of them is True
+is_skillful = (data_frame['educ']>9) | (data_frame['exper']>3)
+
+not_female = data_frame['gender'] != 'Female'                         # not equal to 
+not_female
+```
