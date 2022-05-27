@@ -133,7 +133,7 @@ data_frame = pd.DataFrame(data_dict)    # Create a DataFrame object
 data_frame                              # Display the DataFrame
 
 
-wage	educ	exper	gender	married
+  wage	educ	exper	gender	married
 0	3.10	11.0	2.0	Female	False
 1	3.24	12.0	22.0	Female	True
 2	3.00	11.0	2.0	Male	False
@@ -145,7 +145,7 @@ wage	educ	exper	gender	married
 index = ['Mary', 'Ann', 'John', 'David', 'Frank', 'Ben']
 data_frame_new = pd.DataFrame(data_dict, index=index)  
 
-wage	educ	exper	gender	married
+      wage	educ	exper	gender	married
 Mary	3.10	11.0	2.0	Female	False
 Ann	3.24	12.0	22.0	Female	True
 John	3.00	11.0	2.0	Male	False
@@ -154,8 +154,11 @@ Frank	5.30	12.0	7.0	Male	True
 Ben	8.75	16.0	9.0	Male	True
 ```
 ## 切片
+### 只切列
+**方法一：直接[]，不用loc/iloc**  
+此方法只能单独提取，不可以slicing
 ``` python
-wage = data_frame['wage']              # Access one column
+wage = data_frame['wage']                   # Access one column
 wage ---
 0    3.10
 1    3.24
@@ -165,5 +168,143 @@ wage ---
 5    8.75
 Name: wage, dtype: float64
 
-wage = data_frame['']
+skills = data_frame[['educ', 'exper']]     # Access two columns
+skills ---
+  educ	exper
+0	11.0	2.0
+1	12.0	22.0
+2	11.0	2.0
+3	8.0	44.0
+4	12.0	7.0
+5	16.0	9.0
+
+data_frame['wage':'married']                 # 不可以直接用label-based切片
+cannot do slice indexing on RangeIndex with these indexers [wage] of type str
+```
+
+**方法二：用loc/iloc**
+提取单独几列的时候会比较麻烦 但好在可以切片   
+只要切列了 就必须加上,:
+``` python
+data_frame.loc[:,['wage','educ']]            # 几行 单独几行记得要加括号噢
+wage	educ
+0	3.10	11.0
+1	3.24	12.0
+2	3.00	11.0
+3	6.00	8.0
+4	5.30	12.0
+5	8.75	16.0
+
+data_frame.loc[:,'wage':'married']
+  wage	educ	exper	gender	married          # 如果想要用label-based切片表达 必须在前面加上行 也就是用,划分 取全部行时要用:
+0	3.10	11.0	2.0	Female	False
+1	3.24	12.0	22.0	Female	True
+2	3.00	11.0	2.0	Male	False
+3	6.00	8.0	44.0	Male	True
+4	5.30	12.0	7.0	Male	True
+5	8.75	16.0	9.0	Male	True
+
+data_frame.iloc[:, :5]                       # position也同理
+  wage	educ	exper	gender	married
+0	3.10	11.0	2.0	Female	False
+1	3.24	12.0	22.0	Female	True
+2	3.00	11.0	2.0	Male	False
+3	6.00	8.0	44.0	Male	True
+4	5.30	12.0	7.0	Male	True
+5	8.75	16.0	9.0	Male	True
+
+```
+
+### 只切行
+``` python
+# 取前3行 用切片方法可以不加列的,:
+data_frame.loc[:2]                                           # 用loc表达
+data_frame.iloc[0:3]                                         # 用iloc表达
+  wage	educ	exper	gender	married
+0	3.10	11.0	2.0	Female	False
+1	3.24	12.0	22.0	Female	True
+2	3.00	11.0	2.0	Male	False
+# 为方便记忆 建议都写完整比较好
+```
+
+### 有行有列
+``` python
+# A subset containing the 2nd and the 3rd  columns, and the 2nd and the 3rd rows
+
+data_new_subset = data_frame_new.loc[1:2, 'educ':'exper']   # 用loc表达 注意切片不用加上[]，只有单独提取几列的时候才需要加[]
+data_new_subset = data_frame_new.iloc[1:3, 1:3]             # 用iloc表达 注意这里的列也不要用label 而要用position
+---
+  educ	exper
+1	12.0	22.0
+2	11.0	2.0
+```
+
+### 只筛选一列/一行的情况
+用label_based筛选时 bracket数量决定了输出的是series还是dataframe
+``` python
+# 行
+data_frame_new.loc['John']                 # 不加bracket输出的是series
+wage         3.0
+educ        11.0
+exper        2.0
+gender      Male
+married    False
+Name: John, dtype: object
+
+data_frame_new.loc[['John']]               # 加了bracket输出的是dataframe
+      wage	educ	exper	gender	married
+John	3.0	11.0	2.0	Male	False
+
+# 列
+data_frame_new.loc[:,'wage']               # 不加bracket输出的是series
+Mary     3.10
+Ann      3.24
+John     3.00
+David    6.00
+Frank    5.30
+Ben      8.75
+Name: wage, dtype: float64
+
+data_frame.loc[:,['wage']]                 # 加了bracket输出的是dataframe 
+  wage
+0	3.10
+1	3.24
+2	3.00
+3	6.00
+4	5.30
+5	8.75
+``` 
+用position筛选时 是单值还是slicing式决定了输出的是series还是dataframe
+``` python
+# 行
+data_frame_new.iloc[1]
+wage         3.24
+educ         12.0
+exper        22.0
+gender     Female
+married      True
+Name: Ann, dtype: object
+
+data_frame_new.iloc[1:2]
+wage	educ	exper	gender	married
+Ann	3.24	12.0	22.0	Female	True
+
+# 列
+data_frame_new.iloc[:,0]
+Mary     3.10
+Ann      3.24
+John     3.00
+David    6.00
+Frank    5.30
+Ben      8.75
+Name: wage, dtype: float64
+
+data_frame_new.iloc[:,0:1]
+      wage
+Mary	3.10
+Ann  	3.24
+John	3.00
+David	6.00
+Frank	5.30
+Ben	  8.75
 ```
