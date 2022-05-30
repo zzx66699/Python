@@ -56,10 +56,12 @@ exper = pd.Series([2.0, 22.0, 2.0, 44.0, 7.0, 9.0], index = index)
 
 print(exper.loc['Mary'])                            # 注意如果是输出单个元素，此时输出结果是string
 --- 2.0
+
 print(exper.loc[['Mary']])                          # 两个括号才是Series
 --- 
 Mary    2.0
 dtype: float64
+
 print(exper.loc['John':])                           # 和字典不同的是，可以用切片语法检索多个项目
 --- 
 John      2.0
@@ -67,11 +69,13 @@ David    44.0
 Frank     7.0
 Ben       9.0
 dtype: float64 
+
 print(exper.loc[:'Ann'], '\n')                      # 和position不同，用label定位包含有最后一项
 ---
 Mary     2.0
 Ann     22.0
 dtype: float64 
+
 print(exper.loc[['John', 'Ann']])
 ---
 John     2.0
