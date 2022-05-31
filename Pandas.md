@@ -408,9 +408,9 @@ is_female = data_frame['gender'] == 'Female'    # A boolean Series
 female = data_frame.loc[is_female]              # Select rows indicated by True
 female
 ```
-同理 筛选出的也可以赋值
-The value for married male is changed to the string 'Husband';
-The value for unmarried male or female is changed to the string 'Single'
+同理 筛选出的也可以赋值  
+The value for married male is changed to the string 'Husband';  
+The value for unmarried male or female is changed to the string 'Single'  
 ``` python
 data_frame.loc[(data_frame['married']==True) & (data_frame['gender']=='Male'),'married']='Husband'
 data_frame.loc[data_frame['married']==False, 'married']='Single'
