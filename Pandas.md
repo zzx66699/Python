@@ -416,3 +416,17 @@ data_frame.loc[(data_frame['married']==True) & (data_frame['gender']=='Male'),'m
 data_frame.loc[data_frame['married']==False, 'married']='Single'
 data_frame
 ```
+
+# Descriptive analytics 
+## Read data from files
+``` python
+import pandas as pd
+data = pd.read_csv('wage.csv')  # Read data from a file "wage.csv"
+data.head(6)                    # Return the first six rows of data
+```
+## 获得数据的基础特征
+### centers
+包括mean平均值和median中位数
+``` python
+
+```
