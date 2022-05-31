@@ -162,7 +162,7 @@ Ben	8.75	16.0	9.0	Male	True
 **方法一：直接[]，不用loc/iloc**  
 此方法只能单独提取，不可以slicing
 ``` python
-wage = data_frame['wage']                   # Access one column
+wage = data_frame['wage']                   # Access one column 记住要加''
 wage ---
 0    3.10
 1    3.24
@@ -372,11 +372,47 @@ Name: wage, dtype: bool
 ### 多条件判断 | 和 &
 ``` python
 # Intersection of two conditions: True if both of them are True
-is_wife = (data_frame['gender']=='Female') & (data_frame['married'])
+is_wife = (data_frame['gender']=='Female') & (data_frame['married'])            # 注意一定要加()把独立的判断条件分开来
+0    False
+1     True
+2    False
+3    False
+4    False
+5    False
+dtype: bool
 
 # Union of two conditions: True if either of them is True
 is_skillful = (data_frame['educ']>9) | (data_frame['exper']>3)
+0     True
+1     True
+2    False
+3     True
+4     True
+5     True
+dtype: bool
 
 not_female = data_frame['gender'] != 'Female'                         # not equal to 
 not_female
+0    False
+1    False
+2     True
+3     True
+4     True
+5     True
+Name: gender, dtype: bool
+```
+### 和loc一起使用 筛选目标列
+boolean pandas.Series最重要的用法就是去Select rows indicated by True
+``` python
+is_female = data_frame['gender'] == 'Female'    # A boolean Series 
+female = data_frame.loc[is_female]              # Select rows indicated by True
+female
+```
+同理 筛选出的也可以赋值
+The value for married male is changed to the string 'Husband';
+The value for unmarried male or female is changed to the string 'Single'
+``` python
+data_frame.loc[(data_frame['married']==True) & (data_frame['gender']=='Male'),'married']='Husband'
+data_frame.loc[data_frame['married']==False, 'married']='Single'
+data_frame
 ```
