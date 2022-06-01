@@ -424,9 +424,61 @@ import pandas as pd
 data = pd.read_csv('wage.csv')  # Read data from a file "wage.csv"
 data.head(6)                    # Return the first six rows of data
 ```
-## 获得数据的基础特征
+## 获得总体数据的基础特征
 ### centers
 包括mean平均值和median中位数
-``` python
+``` python 
+print(data.select_dtypes(exclude='object').mean())      # 求每一列的平均值 这里的select_dtypes(exclude='object')是把categorical variable去掉
+wage        5.896103
+educ       12.562738
+exper      17.017110
+married     0.608365
+dtype: float64 
 
+print(data.select_dtypes(exclude='object').median()))   # 每一列的中位数
+wage        4.65
+educ       12.00
+exper      13.50
+married     1.00
+dtype: float64 
+
+print(type(data.select_dtypes(exclude='object').mean()))
+<class 'pandas.core.series.Series'>                     # 输出类型都是pandas.Series
+#每一行的indice是原来的列名称variable name
+```
+### variations
+包括方差和标准差
+``` python
+print(data.select_dtypes(exclude='object').std())             # 标准差
+print(data.select_dtypes(exclude='object').var())             # 方差
+```
+### extreme points
+包括最大值和最小值
+``` python
+print(data.select_dtypes(exclude='object').min())
+print(dara.select_dtypes(exclude='object').max())
+```
+## 获得每一列数据的特征
+同理 把用于总数据的方法单独用在一列上
+``` python
+print(data['wage'].min())
+print(data.loc[data['gender']=='male','wage'].var())
+```
+求某个categorical variable各value的占比
+``` python
+# value=某个值的占比
+print((data['gender']=='male').mean())                # 记得要加括号
+0.5209125475285171                                    # 输出的是单独的string
+
+# 各个value的数量
+print(data['gender'].value_counts())                  # 输出的是pd.Series
+Male      274
+Female    252
+Name: gender, dtype: int64
+
+# 各个value的占比
+print(data['gender'].value_counts(normalize=True))
+Male      0.520913
+Female    0.479087
+Name: gender, dtype: float64
 ```
