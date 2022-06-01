@@ -125,3 +125,142 @@ weather = distr_dict['weather']
 plt.xticks(x, weather, fontsize=13)        # 注意要先写原来的值
 ```
 
+# visualize在数据分析中的应用
+## boxplot
+display the distribution of data based on a five-value summary:  
+The "minimum" value: Q1 -1.5*IQR, or the actual minimum value  
+The first quartile: Q1  
+The second quartile, or the median: Q2,  
+The third quartile: Q3  
+The “maximum” value: Q3 + 1.5*IQR, or the actual maximum value  
+![image](https://user-images.githubusercontent.com/105503216/171328629-403460a9-2ed8-43b0-8e4c-b6c835de7933.png)
+
+``` python
+plt.boxplot(data['wage'],                  # Create a box plot of the wages
+            vert=False)                    # Make the plot horizontal  
+
+plt.xlabel('Hourly wage', fontsize=14)
+plt.show()
+```
+## histogram
+``` python
+plt.hist(data['wage'],                    # Histogram of wages with 20 bins 
+         bins=20,                         # bins可以现解为表示把数据分成多少段，当设置的很大时，说明分的很细，每个列就会细
+         color='b', alpha=0.7)            # Color is blue, opacity is 0.7 
+```
+![image](https://user-images.githubusercontent.com/105503216/171331470-4a6a1b6c-a630-4114-bad2-14cdef62b5b2.png)
+``` python
+plt.hist(data['wage'], bins=10, color='b', alpha=0.4)
+```
+![image](https://user-images.githubusercontent.com/105503216/171331572-ce18bf23-a8d8-44b4-80ce-7267492bb30d.png)
+## correlation
+``` python
+data.corr()
+         wage	educ	 exper	  married
+wage	1.000000	0.405903	 0.112903  0.228817
+educ	0.405903	1.000000	 -0.299542 0.068881
+exper	0.112903	-0.299542 1.000000  0.316984
+married	0.228817	0.068881	 0.316984  1.000000
+```
+## 处理missing value
+missing value在python中表示为`NaN`
+``` python
+pd.options.display.max_columns = 8         # 最多展示8列 但依然是读取全部
+gdp = pd.read_csv('gdp.csv')
+gdp
+```
+![image](https://user-images.githubusercontent.com/105503216/171332892-a63a59e2-b2d8-41e0-9474-9d8d17275176.png)
+### detect 甄别 isnull()
+``` python
+gdp.loc[:,'1960':'1961'].isnull()     # 返回的是boolean
+         1960	1961
+0	True	True
+1	False	False
+2	True	True
+3	True	True
+4	True	True
+...	...	...
+210	True	True
+211	True	True
+212	False	False
+213	False	False
+214	False	False
+```
+### select 筛选 notnull()
+``` python
+gdp_1960 = gdp.loc[gdp['1960'].notnull(),       # Select rows
+                   ['Country Name', '1960']]    # Select columns
+gdp_1960
+
+         Country Name	1960
+1	Afghanistan	5.377778e+08
+10	Australia	1.857767e+10
+11	Austria	6.592694e+09
+13	Burundi	1.960000e+08
+14	Belgium	1.165872e+10
+...	...	...
+204	St. Vincent and the Grenadines	1.306656e+07
+205	Venezuela, RB	7.779091e+09
+212	South Africa	7.575397e+09
+213	Zambia	7.130000e+08
+214	Zimbabwe	1.052990e+09
+```
+### drop 去除 dropna()
+``` python
+gdp_subset = gdp.loc[:6, '1981':'1986']
+gdp_subset
+         1981	1982	1983	1984	1985	1986
+0	NaN	NaN	NaN	NaN	NaN	4.054634e+08
+1	3.478788e+09	NaN	NaN	NaN	NaN	NaN
+2	5.550483e+09	5.550483e+09	5.784342e+09	6.131475e+09	7.553560e+09	7.072063e+09
+3	NaN	NaN	NaN	1.857338e+09	1.897050e+09	2.097326e+09
+4	3.889587e+08	3.758960e+08	3.278618e+08	3.300707e+08	3.467380e+08	4.820006e+08
+5	4.933342e+10	4.662272e+10	4.280332e+10	4.180795e+10	4.060365e+10	3.394361e+10
+6	7.867684e+10	8.430749e+10	1.039791e+11	7.909200e+10	8.841667e+10	1.109344e+11
+
+temp = gdp_subset.dropna()      # 把所有带有NaN的行都删去了
+temp
+         1981	         1982	         1983	         1984	         1985	         1986
+2	5.550483e+09	5.550483e+09	5.784342e+09	6.131475e+09	7.553560e+09	7.072063e+09
+4	3.889587e+08	3.758960e+08	3.278618e+08	3.300707e+08	3.467380e+08	4.820006e+08
+5	4.933342e+10	4.662272e+10	4.280332e+10	4.180795e+10	4.060365e+10	3.394361e+10
+6	7.867684e+10	8.430749e+10	1.039791e+11	7.909200e+10	8.841667e+10	1.109344e+11
+
+# 需要注意的是原来的data并没有改变
+gdp_subset      # The original data frame remains unchanged
+         1981	1982	1983	1984	1985	1986
+0	NaN	NaN	NaN	NaN	NaN	4.054634e+08
+1	3.478788e+09	NaN	NaN	NaN	NaN	NaN
+2	5.550483e+09	5.550483e+09	5.784342e+09	6.131475e+09	7.553560e+09	7.072063e+09
+3	NaN	NaN	NaN	1.857338e+09	1.897050e+09	2.097326e+09
+4	3.889587e+08	3.758960e+08	3.278618e+08	3.300707e+08	3.467380e+08	4.820006e+08
+5	4.933342e+10	4.662272e+10	4.280332e+10	4.180795e+10	4.060365e+10	3.394361e+10
+6	7.867684e+10	8.430749e+10	1.039791e+11	7.909200e+10	8.841667e+10	1.109344e+11
+
+# 如果要直接在原data上面改变 可以加上inplace=True
+temp = gdp_subset.dropna(inplace=True)
+print(temp)     # The output of the dropna method is None 此时返回不出值
+None
+
+gdp_subset      # The original data frame is overwritten 但原来的改变了
+         1981	         1982	         1983	         1984	         1985	         1986
+2	5.550483e+09	5.550483e+09	5.784342e+09	6.131475e+09	7.553560e+09	7.072063e+09
+4	3.889587e+08	3.758960e+08	3.278618e+08	3.300707e+08	3.467380e+08	4.820006e+08
+5	4.933342e+10	4.662272e+10	4.280332e+10	4.180795e+10	4.060365e+10	3.394361e+10
+6	7.867684e+10	8.430749e+10	1.039791e+11	7.909200e+10	8.841667e+10	1.109344e+11
+```
+### replace 替换 fillna()
+``` python
+temp = gdp_subset.fillna('Unknown')      # Fill all NaN items with 'Unknown'
+temp                                     # 同样这里的原序列并没有改变
+           1981	1982	1983	1984	1985	1986
+0	Unknown	Unknown	Unknown	Unknown	Unknown	405463417.11746
+1	3478787909.09091	Unknown	Unknown	Unknown	Unknown	Unknown
+2	5550483035.90815	5550483035.90815	5784341596.36339	6131475065.23832	7553560459.104279	7072063345.44786
+3	Unknown	Unknown	Unknown	1857338011.85488	1897050133.42015	2097326250.0
+4	388958731.302938	375895956.383462	327861832.946636	330070689.298282	346737964.774951	482000594.03588
+5	49333424135.113098	46622718605.284698	42803323345.137604	41807954235.903	40603650231.544502	33943612094.7971
+6	78676842366.421295	84307486836.723999	103979106777.910995	79092001998.031998	88416668900.259598	110934442762.694
+
+gdp_subset.fillna(0, inplace=True)  # 这样原data才会改变
+```
