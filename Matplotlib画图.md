@@ -38,6 +38,22 @@ plt.xlabel('x')                  # Label for x data
 plt.ylabel('y')                  # Label for y data
 plt.show()               
 ```
+### 想要看两个变量之间的关系 并且看分布
+通过alpha=0.x可以看出分布
+``` python
+CCR = data_subset.loc[data_subset['segment']=='CCR']
+RCR = data_subset.loc[data_subset['segment']=='RCR']
+OCR = data_subset.loc[data_subset['segment']=='OCR']
+plt.scatter(CCR['area'], CCR['price'], alpha=0.3, label='CCR')
+plt.scatter(RCR['area'], RCR['price'], alpha=0.3, label='RCR')
+plt.scatter(OCR['area'], OCR['price'], alpha=0.3, label='OCR')
+plt.xlabel('area')
+plt.ylabel('price')
+plt.legend()
+plt.show()
+```
+![image](https://user-images.githubusercontent.com/105503216/171367782-30bdbb45-9579-4b35-966f-5279cabd48f9.png)
+
 ## bar 柱图
 ```python
 step = 1
@@ -51,7 +67,14 @@ plt.xlabel('x')
 plt.ylabel('y')
 plt.show()
 ```
-## 混合问题
+### x轴是categorical variable 每个variable对应一个y轴的值
+``` python
+resale_price = data.loc[data['type']=='Resale','price'].mean()            # 结果是一个数字
+newsale_price = data.loc[data['type']=='New Sale','price'].mean()         # 结果是一个数字
+plt.bar(['Resale','New sale'],                                            # 直接写xticks的名字 要用括号括起来
+        [resale_price,newsale_price])                                     # 对应的y轴的值 这样x和y轴都是值 所以可以画出图
+```
+![image](https://user-images.githubusercontent.com/105503216/171355725-42958dbd-1b45-4bd1-b0fc-30aac603cd1a.png)
 ### x值为categorical variable且两个变量
 ``` python
 distr_dict = {'weather': ['Sunny', 'Cloudy', 'Raining', 'Thunderstorm', 'Haze'],
@@ -79,7 +102,8 @@ plt.ylabel('Demand', fontsize=13)
 plt.show()
 ```
 ![image](https://user-images.githubusercontent.com/105503216/169785225-230303f2-768b-43a6-93e6-c3f8c69a50e1.png)
-### 在同一张图中有多种pattern
+
+## 在同一张图中有多种pattern
 普通列举出来即可  
 ``` python
 import math
@@ -153,6 +177,40 @@ plt.hist(data['wage'],                    # Histogram of wages with 20 bins
 plt.hist(data['wage'], bins=10, color='b', alpha=0.4)
 ```
 ![image](https://user-images.githubusercontent.com/105503216/171331572-ce18bf23-a8d8-44b4-80ce-7267492bb30d.png)
+### 两个变量放在同一张histogram图中
+要注意统一每一个柱子的粗细 这样才可以比较
+``` python
+resale = data.loc[data['type']=='Resale','price']
+newsale = data.loc[data['type']=='New Sale','price']
+plt.hist(resale, bins=15,alpha=0.7, label='resale')
+plt.hist(newsale, bins=15,alpha=0.7, label='newsale')
+plt.legend()
+plt.show()                # 可以看出来每个value的粗细是不一样的 应该统一每个柱形的粗细
+```
+![image](https://user-images.githubusercontent.com/105503216/171360704-3cb1e83a-2510-436f-9cbf-a97d155b3fee.png)
+``` python
+# 首先找到总范围
+data['price'].describe()
+count    3.216800e+04
+mean     1.640373e+06
+std      1.432406e+06
+min      4.880000e+05
+25%      9.800000e+05
+50%      1.300000e+06
+75%      1.774850e+06
+max      5.200000e+07
+Name: price, dtype: float64
+
+# 把bins的上下限定在这个范围之内
+#same value for the bins
+bins = np.arange(5e5, 5e6, 1e5)                                        # bins控制的是图例中横轴的起点 结束和间隔  5*10^5 这里的间隔越大 每个柱子越粗
+plt.hist(data_resale['price'], bins = bins, alpha=0.4, label='Resale') #要same value for the bins
+plt.hist(data_new['price'], bins=bins, alpha=0.4, label='New Sale')
+plt.legend()
+plt.show()
+```
+![image](https://user-images.githubusercontent.com/105503216/171362003-9f4d175d-eb5b-4487-8f55-67cf25d640bf.png)
+
 ## correlation
 ``` python
 data.corr()
