@@ -517,7 +517,80 @@ max	24.980000	    18.000000	  51.00000
 1.普通写法
 ``` python
 # 找出每一个unique值 -- 分别做出subset -- 求mean和std -- 合并
+mean = []
+std = [] 
+for segment in data['segment'].unique():            # Iterate all values of segments
+    subset = data.loc[data['segment'] == segment]   # Take a subset for one segment
+    means.append(subset['price'].mean())            # Append the mean of the subset
+    stds.append(subset['price'].std())              # Append the std of the subset
 
+print('Average prices:      ', means)
+print('Standard deviations: ', stds)
+```
+2.使用groupby以及agg()函数
+.groupby
+``` python
+price_means = data.groupby('segment')['price'].mean()        # groupby相当于把原数据按照unique的值分成了多个subset
+price_means
+```
+agg()可以同时使用多种算法 相当于.mean() .max() .min()等函数的集合
+对于一个column用多个function
+``` python
+funs = ['count', 'median', 'max', 'min']
+condo.groupby('segment')['price'].agg(funs)                  # groupby后面用的是() 不是[]
+
+    count	 median	 max	    min
+segment				
+CCR	5107	2450000	52000000	560088
+OCR	16652	1069590	4881708	488000
+RCR	10409	1490000	19000000	570000
+
+price_info.columns
+Index(['count', 'median', 'max', 'min'], dtype='object')
+
+price_info.index
+Index(['CCR', 'OCR', 'RCR'], dtype='object', name='segment')
+
+# 可以把index转化成第一列 然后生成新的index
+price_info.reset_index()                        # 但原dataset不变
+  segment	count	  median	max	     min
+0	CCR	    5107	2450000	52000000	560088
+1	OCR	    16652	1069590	4881708	  488000
+2	RCR	    10409	1490000	19000000	570000
+```
+单一column分组 多个column用function
+``` python
+funs = ['count', 'median', 'max', 'min']
+f = condo.groupby('segment')[['price','unit_price']].agg(funs)
+f
+    price	                          unit_price
+    count	median	max	min	          count	median	max	min
+segment								
+CCR	5107	2450000	52000000	560088	5107	1937	4913	684
+OCR	16652	1069590	4881708	488000	16652	1078	2285	485
+RCR	10409	1490000	19000000	570000	10409	1560	2908	597
+
+f.columns
+MultiIndex([(     'price',  'count'),
+            (     'price', 'median'),
+            (     'price',    'max'),
+            (     'price',    'min'),
+            ('unit_price',  'count'),
+            ('unit_price', 'median'),
+            ('unit_price',    'max'),
+            ('unit_price',    'min')],
+           )
+           
+f.index
+Index(['CCR', 'OCR', 'RCR'], dtype='object', name='segment')
+
+# 同样可以把index转化成第一列 然后生成新的index
+a.reset_index()
+ segment price	            unit_price
+      count	median	max	min	count	median	max	min
+0	CCR	5107	2450000	52000000	560088	5107	1937	4913	684
+1	OCR	16652	1069590	4881708	488000	16652	1078	2285	485
+2	RCR	10409	1490000	19000000	570000	10409	1560	2908	597
 ```
 ### transformation
 ### filtering
