@@ -459,7 +459,12 @@ print(data.select_dtypes(exclude='object').min())
 print(dara.select_dtypes(exclude='object').max())
 ```
 ## 获得每一列数据的特征
-同理 把用于总数据的方法单独用在一列上
+使用.unique()获取不重复的值 结果是array表示
+``` python
+condo['segment'].unique()
+array(['CCR', 'RCR', 'OCR'], dtype=object)
+```
+也可以把用于总数据的方法单独用在一列上
 ``` python
 print(data['wage'].min())
 print(data.loc[data['gender']=='male','wage'].var())
