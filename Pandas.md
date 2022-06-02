@@ -157,6 +157,16 @@ David	6.00	8.0	44.0	Male	True
 Frank	5.30	12.0	7.0	Male	True
 Ben	8.75	16.0	9.0	Male	True
 ```
+
+## 查看基础特征 行名和列名column和index
+``` python
+price_info.columns       
+Index(['count', 'median', 'max', 'min'], dtype='object')    
+
+price_info.index   
+Index(['CCR', 'OCR', 'RCR'], dtype='object', name='segment')
+```
+
 ## 切片
 ### 只切列
 **方法一：直接[]，不用loc/iloc**  
