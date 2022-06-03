@@ -823,7 +823,7 @@ outcome
 ![image](https://user-images.githubusercontent.com/105503216/171841923-056dc369-532d-467c-ac09-0de9f99b584d.png)
 ## 矢量化字符串操作Vectorized string operations
 通过`str`矢量化字符串  
-1.lower（）变成小写
+### 1.lower（）变成小写
 ``` python
 condo['name'].str.lower()
 0                    seascape
@@ -839,14 +839,14 @@ condo['name'].str.lower()
 32167             the estuary
 Name: name, Length: 32168, dtype: object
 ```
-2.把一列中得每一项都截取xx部分
+### 2.把一列中得每一项都截取xx部分
 Notice that the condo level is given as a string "XX to YY".   
 Create two columns level_from and level_to, that are the level numbers "XX" and "YY", as int type values.
 ``` python
 condo['level_from'] = condo['level'].str[:2].astype(int)    # 如果不加.str就会只能截取第一行的前2个，后面都是NaN
 condo['level_to'] = condo['level'].str[-2:].astype(int)     # astype()可以改变type
 ```
-3.把dataframe按照某一列重新排序
+## 按照某一列重新排序 .sort_values()
 Considering Singapore condos in the district 5, show the monthly trends of  
 1) the average unit prices; and 2) the number of transactions, in recent years.
 ``` python
@@ -874,3 +874,4 @@ date	mean	count	time
 3	Feb-17	1237.646739	184	2017-02-01
 4	Mar-17	1219.400000	160	2017-03-01
 ```
+## 数据透视表 Pivot table 
