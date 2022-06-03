@@ -117,6 +117,28 @@ plt.show()
 ```
 ![image](https://user-images.githubusercontent.com/105503216/169791515-0ef721a2-f9f5-424b-9cd8-5adb564ba0f5.png)
 
+两个量的量纲差别很大 无法用同一种图案表达 变成一个是plot一个是scatter
+``` python
+o.head(5)  
+         date	mean	         count	time
+0	Nov-16	1218.390244	41	2016-11-01
+1	Dec-16	1141.553191	47	2016-12-01
+2	Jan-17	1241.507937	63	2017-01-01
+3	Feb-17	1237.646739	184	2017-02-01
+4	Mar-17	1219.400000	160	2017-03-01
+
+plt.figure(figsize=(12,5))
+plt.plot(o['date'], o['mean'], color='r', label='mean')
+# 为了让两个scale不同的放在同一张表上 可以采用scatter的大小表示数量的多少 还可以放大几倍来达到效果
+plt.scatter(o['date'], o['mean'], s=o['count']*3, color='r', alpha=0.5, label='count') # 此时注意y轴还是应该用mean的数值 来保证在那一个点上
+plt.xlabel('time')
+plt.ylabel('unit price')
+plt.xticks(rotation=90)  # 把tick旋转
+plt.legend()
+plt.grid()              # 加点各自背景
+plt.show()
+```
+![image](https://user-images.githubusercontent.com/105503216/171904544-0f129a15-978b-4ad6-bd4e-d6fce119de91.png)
 
 ## Configured functions  
 ``` python
@@ -124,13 +146,14 @@ step = 1
 x = np.arange(0, 10+step, step)
 y = np.exp(x/2)
 ```
-### plt.figure(figsize=(,)) 
+### 图像大小
 `plt.figure(figsize=(7,4))`  
-### plt.title('标题名', fontsize=) 
+### 标题名
 `plt.title('Bar graph', fontsize=15)`  
-### plt.xlabel('x轴名', fontsize=) & plt.ylabel('y轴名', fontsize=)
+### xy轴名
 'plt.xlabel('y', fontsize=15)'
-### plt.legend(fontsize=)
+### 显示出label名
+`plt.legend(fontsize=15)`
 ``` python
 plt.plot(x, y, linewidth=3, linestyle=':', marker='o', color='r', 
          label=‘line1’)         # Label of the line plot1
@@ -139,7 +162,7 @@ plt.plot(x, y, linewidth=2, linestyle='-.', marker='v', color='b',
 plt.legend(fontsize=13)         # Display the legend
 plt.show()
 ```
-### plt.xticks(原来数值，现在的项名称，fontsize=)  x轴中每一项的项目名称
+### x轴中每一项的项目名称 plt.xticks(原来数值，现在的项名称，fontsize=)  
 ``` python
 distr_dict = {'weather': ['Sunny', 'Cloudy', 'Raining', 'Thunderstorm', 'Haze'],
               'probs': [0.315, 0.226, 0.289, 0.087, 0.083],
@@ -148,6 +171,10 @@ distr_dict = {'weather': ['Sunny', 'Cloudy', 'Raining', 'Thunderstorm', 'Haze'],
 weather = distr_dict['weather']
 plt.xticks(x, weather, fontsize=13)        # 注意要先写原来的值
 ```
+### 旋转
+`plt.xticks(rotation=90)`
+### 网格背景 
+`plt.grid()`
 
 # visualize在数据分析中的应用
 ## boxplot
@@ -210,115 +237,3 @@ plt.legend()
 plt.show()
 ```
 ![image](https://user-images.githubusercontent.com/105503216/171362003-9f4d175d-eb5b-4487-8f55-67cf25d640bf.png)
-
-## correlation
-``` python
-data.corr()
-         wage	educ	 exper	  married
-wage	1.000000	0.405903	 0.112903  0.228817
-educ	0.405903	1.000000	 -0.299542 0.068881
-exper	0.112903	-0.299542 1.000000  0.316984
-married	0.228817	0.068881	 0.316984  1.000000
-```
-## 处理missing value
-missing value在python中表示为`NaN`
-``` python
-pd.options.display.max_columns = 8         # 最多展示8列 但依然是读取全部
-gdp = pd.read_csv('gdp.csv')
-gdp
-```
-![image](https://user-images.githubusercontent.com/105503216/171332892-a63a59e2-b2d8-41e0-9474-9d8d17275176.png)
-### detect 甄别 isnull()
-``` python
-gdp.loc[:,'1960':'1961'].isnull()     # 返回的是boolean
-         1960	1961
-0	True	True
-1	False	False
-2	True	True
-3	True	True
-4	True	True
-...	...	...
-210	True	True
-211	True	True
-212	False	False
-213	False	False
-214	False	False
-```
-### select 筛选 notnull()
-``` python
-gdp_1960 = gdp.loc[gdp['1960'].notnull(),       # Select rows
-                   ['Country Name', '1960']]    # Select columns
-gdp_1960
-
-         Country Name	1960
-1	Afghanistan	5.377778e+08
-10	Australia	1.857767e+10
-11	Austria	6.592694e+09
-13	Burundi	1.960000e+08
-14	Belgium	1.165872e+10
-...	...	...
-204	St. Vincent and the Grenadines	1.306656e+07
-205	Venezuela, RB	7.779091e+09
-212	South Africa	7.575397e+09
-213	Zambia	7.130000e+08
-214	Zimbabwe	1.052990e+09
-```
-### drop 去除 dropna()
-``` python
-gdp_subset = gdp.loc[:6, '1981':'1986']
-gdp_subset
-         1981	1982	1983	1984	1985	1986
-0	NaN	NaN	NaN	NaN	NaN	4.054634e+08
-1	3.478788e+09	NaN	NaN	NaN	NaN	NaN
-2	5.550483e+09	5.550483e+09	5.784342e+09	6.131475e+09	7.553560e+09	7.072063e+09
-3	NaN	NaN	NaN	1.857338e+09	1.897050e+09	2.097326e+09
-4	3.889587e+08	3.758960e+08	3.278618e+08	3.300707e+08	3.467380e+08	4.820006e+08
-5	4.933342e+10	4.662272e+10	4.280332e+10	4.180795e+10	4.060365e+10	3.394361e+10
-6	7.867684e+10	8.430749e+10	1.039791e+11	7.909200e+10	8.841667e+10	1.109344e+11
-
-temp = gdp_subset.dropna()      # 把所有带有NaN的行都删去了
-temp
-         1981	         1982	         1983	         1984	         1985	         1986
-2	5.550483e+09	5.550483e+09	5.784342e+09	6.131475e+09	7.553560e+09	7.072063e+09
-4	3.889587e+08	3.758960e+08	3.278618e+08	3.300707e+08	3.467380e+08	4.820006e+08
-5	4.933342e+10	4.662272e+10	4.280332e+10	4.180795e+10	4.060365e+10	3.394361e+10
-6	7.867684e+10	8.430749e+10	1.039791e+11	7.909200e+10	8.841667e+10	1.109344e+11
-
-# 需要注意的是原来的data并没有改变
-gdp_subset      # The original data frame remains unchanged
-         1981	1982	1983	1984	1985	1986
-0	NaN	NaN	NaN	NaN	NaN	4.054634e+08
-1	3.478788e+09	NaN	NaN	NaN	NaN	NaN
-2	5.550483e+09	5.550483e+09	5.784342e+09	6.131475e+09	7.553560e+09	7.072063e+09
-3	NaN	NaN	NaN	1.857338e+09	1.897050e+09	2.097326e+09
-4	3.889587e+08	3.758960e+08	3.278618e+08	3.300707e+08	3.467380e+08	4.820006e+08
-5	4.933342e+10	4.662272e+10	4.280332e+10	4.180795e+10	4.060365e+10	3.394361e+10
-6	7.867684e+10	8.430749e+10	1.039791e+11	7.909200e+10	8.841667e+10	1.109344e+11
-
-# 如果要直接在原data上面改变 可以加上inplace=True
-temp = gdp_subset.dropna(inplace=True)
-print(temp)     # The output of the dropna method is None 此时返回不出值
-None
-
-gdp_subset      # The original data frame is overwritten 但原来的改变了
-         1981	         1982	         1983	         1984	         1985	         1986
-2	5.550483e+09	5.550483e+09	5.784342e+09	6.131475e+09	7.553560e+09	7.072063e+09
-4	3.889587e+08	3.758960e+08	3.278618e+08	3.300707e+08	3.467380e+08	4.820006e+08
-5	4.933342e+10	4.662272e+10	4.280332e+10	4.180795e+10	4.060365e+10	3.394361e+10
-6	7.867684e+10	8.430749e+10	1.039791e+11	7.909200e+10	8.841667e+10	1.109344e+11
-```
-### replace 替换 fillna()
-``` python
-temp = gdp_subset.fillna('Unknown')      # Fill all NaN items with 'Unknown'
-temp                                     # 同样这里的原序列并没有改变
-           1981	1982	1983	1984	1985	1986
-0	Unknown	Unknown	Unknown	Unknown	Unknown	405463417.11746
-1	3478787909.09091	Unknown	Unknown	Unknown	Unknown	Unknown
-2	5550483035.90815	5550483035.90815	5784341596.36339	6131475065.23832	7553560459.104279	7072063345.44786
-3	Unknown	Unknown	Unknown	1857338011.85488	1897050133.42015	2097326250.0
-4	388958731.302938	375895956.383462	327861832.946636	330070689.298282	346737964.774951	482000594.03588
-5	49333424135.113098	46622718605.284698	42803323345.137604	41807954235.903	40603650231.544502	33943612094.7971
-6	78676842366.421295	84307486836.723999	103979106777.910995	79092001998.031998	88416668900.259598	110934442762.694
-
-gdp_subset.fillna(0, inplace=True)  # 这样原data才会改变
-```
