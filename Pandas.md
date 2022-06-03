@@ -511,9 +511,9 @@ min	0.530000	    0.000000	  1.00000
 75%	6.880000	    14.000000	  26.00000
 max	24.980000	    18.000000	  51.00000
 ```
-## 多列同时进行多种操作
-### aggregate
-对于一列中的每一个unique值，求在另一列中对应的mean和std  
+## 按分组将多列同时进行多种操作
+### aggregate 每一组只输出一个值 所以输出的行数=组别数
+**单一column分组 单一column中对应的mean和std**  
 1.普通写法
 ``` python
 # 找出每一个unique值 -- 分别做出subset -- 求mean和std -- 合并
@@ -527,11 +527,16 @@ for segment in data['segment'].unique():            # Iterate all values of segm
 print('Average prices:      ', means)
 print('Standard deviations: ', stds)
 ```
-2.使用groupby以及agg()函数
+2.使用groupby以及agg()函数的普通形式
 .groupby
 ``` python
 price_means = data.groupby('segment')['price'].mean()        # groupby相当于把原数据按照unique的值分成了多个subset
 price_means
+segment
+CCR    3.299744e+06
+OCR    1.129063e+06
+RCR    1.644209e+06
+Name: price, dtype: float64
 ```
 agg()可以同时使用多种算法 相当于.mean() .max() .min()等函数的集合
 对于一个column用多个function
@@ -558,7 +563,28 @@ price_info.reset_index()                        # 但原dataset不变
 1	OCR	    16652	1069590	4881708	  488000
 2	RCR	    10409	1490000	19000000	570000
 ```
-单一column分组 多个column用function
+3.使用def定义需要的function
+例如要求四分位距 即0.75-0.25
+``` python
+def func(x):
+    return x.quantile(0.75) - x.quantile(0.25)
+condo.groupby('segment')['price'].agg(func)    # 注意这里把用function的那一列写在前面 func后面不加()了
+segment
+CCR    2010000
+OCR     470000
+RCR     708800
+Name: price, dtype: int64
+```
+4.使用lambda简化function
+typically used to return the result expressed by a single-line statement 单一行的计算结果
+``` python
+condo.groupby('segment')['price'].agg(lambda x : x.quantile(0.75) - x.quantile(0.25)).reset_index()
+  segment	price
+0	CCR	    2010000
+1	OCR	    470000
+2	RCR	    708800
+```
+**单一column分组 多个column用function**
 ``` python
 funs = ['count', 'median', 'max', 'min']
 f = condo.groupby('segment')[['price','unit_price']].agg(funs)
@@ -592,5 +618,92 @@ a.reset_index()
 1	OCR	16652	1069590	4881708	488000	16652	1078	2285	485
 2	RCR	10409	1490000	19000000	570000	10409	1560	2908	597
 ```
-### transformation
-### filtering
+**单一column分组 多个column用不同的function**  
+用dictionary 不同的column对应不同的function
+``` python
+d = {'price':['max','min'],
+     'unit_price':['count','mean']}               # 注意这里前面的key只能是单一值 不能是[‘xx’,‘xx’]
+condo.groupby('segment').agg(d).reset_index()
+  segment	price	        unit_price
+       max	    min	    count	mean
+0	CCR	52000000	560088	5107	2047.080674
+1	OCR	4881708	488000	16652	1098.835275
+2	RCR	19000000	570000	10409	1544.190220
+```
+### transformation 行数永远和原数据的行数一样
+例如把每个值normalize 标准化处理 去除量纲dimension 使不同数量级scale的数据能够比较
+``` python
+# def
+def func(x):
+    return (x - x.min()) / (x.max() - x.min())
+condo.groupby('segment')['price'].transform(func)
+# 或者lambda
+condo.groupby('segment')['price'].transform(lambda x : (x - x.min()) / (x.max() - x.min()))
+0        0.074415
+1        0.039609
+2        0.288367
+3        0.082203
+4        0.069392
+           ...   
+32163    0.177527
+32164    0.076473
+32165    0.173430
+32166    0.135193
+32167    0.027767
+Name: price, Length: 32168, dtype: float64
+```
+### apply
+apply既可以当成agg也可以当成transform 根据后面的函数来定 但是一般不用 因为不明确
+``` python
+price_iqr = data.groupby('segment')['price'].apply(lambda x: 
+                                                   x.quantile(0.75) - x.quantile(0.25))
+
+price_norm = data.groupby('segment')['price'].apply(lambda x: 
+                                                    (x-x.min())/(x.max()-x.min()))
+```
+### filtering 只有先分组了 之后采用filter
+在分组的基础上再按照条件筛选组别
+``` python
+# keep all groups in which the mean price is lower than 1800 dollars per square feet
+outcome = condo.groupby('segment').filter(lambda x : x['unit_price'].mean() < 1800)
+outcome.reset_index(drop=True, inplace=True) 
+outcome
+#drop是把原来的index去掉（因为reset_ndex会把原来的row index变成一个new column，所以要把它去掉）
+#inplace是指make change to the original dataframe，而不是新建一个dataframe
+# 特别注意这里不能写成outcome = condo.groupby('segment').filter(lambda x : x['unit_price'].mean() < 1800).reset_index(drop=True, inplace=True) 
+# 因为这个返回值是空 所以不能在前面给它outcome=的赋值
+```
+![image](https://user-images.githubusercontent.com/105503216/171838747-2224a4b5-e0fa-484e-b527-266311cc71b6.png)
+## 关于时间的处理方法
+pd.to_datetime()把str变成Time series data  
+这个网页是年月日表示:https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior
+``` python
+time = pd.to_datetime(condo['date'], format='%b-%y')
+time
+0       2019-11-01
+1       2019-11-01
+2       2019-11-01
+3       2019-11-01
+4       2019-11-01
+           ...    
+32163   2016-11-01
+32164   2016-11-01
+32165   2016-11-01
+32166   2016-11-01
+32167   2016-11-01
+Name: date, Length: 32168, dtype: datetime64[ns]
+```
+实例 Create a new dataset with all condo transactions from January 2018 to June 2018
+``` python
+# 首先转变成datetime的格式 并加入dataframe中
+condo['time'] = pd.to_datetime(condo['date'], format='%b-%y')
+# 接下来确定range的范围 注意range也要是datetime的形式
+r = pd.to_datetime(['Jun-18','Jan-18'], format='%b-%y')
+r
+DatetimeIndex(['2018-06-01', '2018-01-01'], dtype='datetime64[ns]', freq=None)
+# 下面开始根据range筛选 把头和尾拆开来分别判断
+outcome = condo.loc[(condo['time'] <= r[0]) & (condo['time'] >= r[1])]   # 再次注意要()&()
+outcome.reset_index(drop=True,inplace=True)
+outcome
+```
+![image](https://user-images.githubusercontent.com/105503216/171841923-056dc369-532d-467c-ac09-0de9f99b584d.png)
