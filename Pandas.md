@@ -434,7 +434,21 @@ import pandas as pd
 data = pd.read_csv('wage.csv')  # Read data from a file "wage.csv"
 data.head(6)                    # Return the first six rows of data
 ```
-## 获得总体数据的基础特征
+## (1)获得总体数据的基础特征
+### .describe()
+一键获取基础信息
+``` python
+data.describe()
+      wage	      educ	       exper
+count	526.000000	526.000000	526.00000
+mean	5.896103	  12.562738	  17.01711
+std	3.693086	    2.769022	  13.57216
+min	0.530000	    0.000000	  1.00000
+25%	3.330000	    12.000000	  5.00000
+50%	4.650000  	  12.000000	  13.50000
+75%	6.880000	    14.000000	  26.00000
+max	24.980000	    18.000000	  51.00000
+```
 ### centers
 包括mean平均值和median中位数
 ``` python 
@@ -468,7 +482,7 @@ print(data.select_dtypes(exclude='object').var())             # 方差
 print(data.select_dtypes(exclude='object').min())
 print(dara.select_dtypes(exclude='object').max())
 ```
-## 获得每一列数据的特征
+## (2) 获得每一列数据的特征
 使用.unique()获取不重复的值 结果是array表示
 ``` python
 condo['segment'].unique()
@@ -497,22 +511,8 @@ Male      0.520913
 Female    0.479087
 Name: gender, dtype: float64
 ```
-## .describe()
-一键获取基础信息
-``` python
-data.describe()
-      wage	      educ	       exper
-count	526.000000	526.000000	526.00000
-mean	5.896103	  12.562738	  17.01711
-std	3.693086	    2.769022	  13.57216
-min	0.530000	    0.000000	  1.00000
-25%	3.330000	    12.000000	  5.00000
-50%	4.650000  	  12.000000	  13.50000
-75%	6.880000	    14.000000	  26.00000
-max	24.980000	    18.000000	  51.00000
-```
 
-## correlation
+## (3) correlation
 ``` python
 data.corr()
          wage	educ	 exper	  married
@@ -522,7 +522,7 @@ exper	0.112903	-0.299542 1.000000  0.316984
 married	0.228817	0.068881	 0.316984  1.000000
 ```
 
-## 处理missing value
+## (4) 处理missing value
 missing value在python中表示为`NaN`
 ``` python
 pd.options.display.max_columns = 8         # 最多展示8列 但依然是读取全部
@@ -625,7 +625,7 @@ temp                                     # 同样这里的原序列并没有改�
 gdp_subset.fillna(0, inplace=True)  # 这样原data才会改变
 ```
 
-## 按分组将多列同时进行多种操作
+## (5) 按分组将多列同时进行多种操作
 ### aggregate 每一组只输出一个值 所以输出的行数=组别数
 **单一column分组 单一column中对应的mean和std**  
 1.普通写法
@@ -744,6 +744,38 @@ condo.groupby('segment').agg(d).reset_index()
 1	OCR	4881708	488000	16652	1098.835275
 2	RCR	19000000	570000	10409	1544.190220
 ```
+**多个column分组**
+简单方法可以参考pivot_table
+Explore the percentage of survival by sex and classes.
+``` python
+d = data_titan.groupby(['sex','class'])['survived'].mean()
+d
+sex     class 
+female  First     0.968085
+        Second    0.921053
+        Third     0.500000
+male    First     0.368852
+        Second    0.157407
+        Third     0.135447
+Name: survived, dtype: float64
+
+d.index            # 两层index row indices of the series above have two layers, containing all combinations of values of sex and class.
+MultiIndex([('female',  'First'),
+            ('female', 'Second'),
+            ('female',  'Third'),
+            (  'male',  'First'),
+            (  'male', 'Second'),
+            (  'male',  'Third')],
+           names=['sex', 'class'])
+	   
+# 通过unstack()可以把inner layer转化成column name
+d = d.unstack()   # 这是有返回值的
+d
+class	First	        Second	        Third
+sex			
+female	0.968085	0.921053	0.500000
+male	0.368852	0.157407	0.135447
+```
 ### transformation 行数永远和原数据的行数一样
 例如把每个值normalize 标准化处理 去除量纲dimension 使不同数量级scale的数据能够比较
 ``` python
@@ -788,7 +820,8 @@ outcome
 # 因为这个返回值是空 所以不能在前面给它outcome=的赋值
 ```
 ![image](https://user-images.githubusercontent.com/105503216/171838747-2224a4b5-e0fa-484e-b527-266311cc71b6.png)
-## 关于时间的处理方法
+
+## (6) 关于时间的处理方法
 pd.to_datetime()把str变成Time series data  
 这个网页是年月日表示:https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior
 ``` python
@@ -821,7 +854,8 @@ outcome.reset_index(drop=True,inplace=True)
 outcome
 ```
 ![image](https://user-images.githubusercontent.com/105503216/171841923-056dc369-532d-467c-ac09-0de9f99b584d.png)
-## 矢量化字符串操作Vectorized string operations
+
+## (7) 矢量化字符串操作Vectorized string operations
 通过`str`矢量化字符串  
 ### 1.lower（）变成小写
 ``` python
@@ -846,7 +880,7 @@ Create two columns level_from and level_to, that are the level numbers "XX" and 
 condo['level_from'] = condo['level'].str[:2].astype(int)    # 如果不加.str就会只能截取第一行的前2个，后面都是NaN
 condo['level_to'] = condo['level'].str[-2:].astype(int)     # astype()可以改变type
 ```
-## 按照某一列重新排序 .sort_values()
+## (8) 按照某一列重新排序 .sort_values()
 Considering Singapore condos in the district 5, show the monthly trends of  
 1) the average unit prices; and 2) the number of transactions, in recent years.
 ``` python
@@ -855,12 +889,12 @@ fun = ['mean','count']
 o = subset.groupby('time')['unit_price'].agg(fun)
 o.reset_index(inplace=True)
 o.head(5)                                # 此时是按照alphabetical的顺序排序的 我们希望按照时间顺序
-	date	mean	count	time
-0	Apr-17	1162.106195	113	2017-04-01
-1	Apr-18	1151.673913	46	2018-04-01
-2	Apr-19	1197.903226	31	2019-04-01
-3	Aug-17	1174.113924	79	2017-08-01
-4	Aug-18	1244.913043	23	2018-08-01
+	date	mean	        count	
+0	Apr-17	1162.106195	113	
+1	Apr-18	1151.673913	46	
+2	Apr-19	1197.903226	31	
+3	Aug-17	1174.113924	79	
+4	Aug-18	1244.913043	23	
 
 # 可以新建一列datetime 按照datetime排序
 o['time']=pd.to_datetime(o['date'], format='%b-%y')  # 新建一列datetime的
@@ -874,4 +908,45 @@ date	mean	count	time
 3	Feb-17	1237.646739	184	2017-02-01
 4	Mar-17	1219.400000	160	2017-03-01
 ```
-## 数据透视表 Pivot table 
+
+## (9) 创建interval
+``` python
+age = pd.cut(data_titian['age'], [0,18,50,80])  # 按照4个节点分成3个interval
+age.head(10)
+0    (18.0, 50.0]
+1    (18.0, 50.0]
+2    (18.0, 50.0]
+3    (18.0, 50.0]
+4    (18.0, 50.0]
+5             NaN
+6    (50.0, 80.0]
+7     (0.0, 18.0]
+8    (18.0, 50.0]
+9     (0.0, 18.0]
+Name: age, dtype: category
+Categories (3, interval[int64]): [(0, 18] < (18, 50] < (50, 80]]
+```
+
+## (10) 数据透视表 Pivot table 
+Explore the percentage of survival by sex and classes.
+``` python
+d = data_titan.pivot_table('survived', columns='class', index='sex')
+d           # 这里可以参考agg里面的多个column分组 简化写法
+class	First	        Second	        Third
+sex			
+female	0.968085	0.921053	0.500000
+male	0.368852	0.157407	0.135447
+
+d.index.name = None   # 把index和column的名字删去
+d.columns.name = None
+d
+        First	        Second	        Third
+female	0.968085	0.921053	0.500000
+male	0.368852	0.157407	0.135447
+```
+index也可以是multi layer
+``` python
+d = data_titan.pivot_table('survived', index=[age, 'sex'], columns='class') 
+# 注意这里的age都不是dataframe中的一列 是独立的variable 默认一一对应起来了
+```
+![image](https://user-images.githubusercontent.com/105503216/171981570-d42874ad-a548-4439-a5f0-113061ea748a.png)
