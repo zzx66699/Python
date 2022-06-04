@@ -175,6 +175,13 @@ plt.xticks(x, weather, fontsize=13)        # 注意要先写原来的值
 `plt.xticks(rotation=90)`
 ### 网格背景 
 `plt.grid()`
+### 填充
+``` python
+plt.fill_between(d, y1=[0]*9, y2=p, color='orange', alpha=0.5, label='law')
+# y1 和 y2 分别代表了填充的上边缘和下边缘
+# d是左右的范围
+```
+![image](https://user-images.githubusercontent.com/105503216/172012567-3b2a4d8c-1ea3-4d25-8bb9-df7f276b6b06.png)
 
 # visualize在数据分析中的应用
 ## boxplot
