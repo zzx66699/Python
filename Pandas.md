@@ -878,7 +878,8 @@ Notice that the condo level is given as a string "XX to YY".
 Create two columns level_from and level_to, that are the level numbers "XX" and "YY", as int type values.
 ``` python
 condo['level_from'] = condo['level'].str[:2].astype(int)    # 如果不加.str就会只能截取第一行的前2个，后面都是NaN
-condo['level_to'] = condo['level'].str[-2:].astype(int)     # astype()可以改变type
+condo['level_to'] = condo['level'].str[-2:].astype(int)     # astype()可以改变type astype在使用的时候前面不用加str 这里是为了切片才加的str 
+# 同时有返回值 不是在原dataframe上的改变 所以需要赋值
 ```
 ## (8) 按照某一列重新排序 .sort_values()
 Considering Singapore condos in the district 5, show the monthly trends of  
