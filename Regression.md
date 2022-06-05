@@ -1,7 +1,11 @@
 # Explanatory modeling
 注重parameter
 ## Linear regression
-General expression of linear regression
+**关于linear regression的定义**  
+不用管variable不linear，但是parameter是linear就行了 下面的都是linear regression
+![image](https://user-images.githubusercontent.com/105503216/172055899-c08cf177-e727-4f6f-82d0-4bbe82c35396.png)
+  
+**General expression of linear regression**
   ![image](https://user-images.githubusercontent.com/105503216/172052557-8736f48a-69a6-4628-9dfc-6637d4ac05bf.png)
   
 ![image](https://user-images.githubusercontent.com/105503216/172053084-3bc65d36-6587-4bd1-aec5-1b339439b2c4.png)
@@ -12,7 +16,8 @@ General expression of linear regression
 ![image](https://user-images.githubusercontent.com/105503216/172053098-951b7062-a3b1-489a-bf45-1796f6e82797.png)
   
 ![image](https://user-images.githubusercontent.com/105503216/172054524-7ce10fe6-5414-484b-ab45-9b5c891a89fa.png)
-  
+
+
 ### The ordinary least squares (OLS) method 最小二乘法
 为了保证残差的平方和最小 sum of squared residuals(SSR)
 ![image](https://user-images.githubusercontent.com/105503216/172053237-d696b6b0-12bb-45cd-ab0d-a57b9d9617c7.png)
@@ -41,7 +46,11 @@ print(result)                            # 如果不加.summary()
 model = smf.ols('sales ~ TV + radio + newspaper', data = data)       # 多个x值用+相连接
 result = model.fit()
 print(result.summary())
-
+``` 
+![image](https://user-images.githubusercontent.com/105503216/172055777-968a3b21-e59d-4b2a-98ab-28cdad8e45aa.png)
+  
+对于结果的每一列的拆分 进行单独输出
+``` python
 # 只要系数
 print(result.params)       # 可以把所有x地paramster求出来 注意这里是result的固有属性 就像dataframe的index 所以不加()
 Intercept    2.938889
