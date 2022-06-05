@@ -3,10 +3,16 @@
 ## Linear regression
 General expression of linear regression
   ![image](https://user-images.githubusercontent.com/105503216/172052557-8736f48a-69a6-4628-9dfc-6637d4ac05bf.png)
+  
 ![image](https://user-images.githubusercontent.com/105503216/172053084-3bc65d36-6587-4bd1-aec5-1b339439b2c4.png)
+标准误差standard error  
+这里可以理解为 是PRF所求的系数 和SRF所求的系数 之间的差距
+  
+  
 ![image](https://user-images.githubusercontent.com/105503216/172053098-951b7062-a3b1-489a-bf45-1796f6e82797.png)
+  
 ![image](https://user-images.githubusercontent.com/105503216/172054524-7ce10fe6-5414-484b-ab45-9b5c891a89fa.png)
-
+  
 ### The ordinary least squares (OLS) method 最小二乘法
 为了保证残差的平方和最小 sum of squared residuals(SSR)
 ![image](https://user-images.githubusercontent.com/105503216/172053237-d696b6b0-12bb-45cd-ab0d-a57b9d9617c7.png)
