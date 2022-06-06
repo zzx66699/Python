@@ -21,7 +21,7 @@
 ### The ordinary least squares (OLS) method 最小二乘法
 为了保证残差的平方和最小 sum of squared residuals(SSR)
 ![image](https://user-images.githubusercontent.com/105503216/172053237-d696b6b0-12bb-45cd-ab0d-a57b9d9617c7.png)
-**simple regression 只有一个x值**
+#### simple regression 只有一个x值
 ``` python
 import statsmodels.formula.api as smf   # 调用这个module模块
 data = pd.read_csv('xydata.csv')
@@ -39,8 +39,9 @@ print(result.summary())                  # 导出result 注意一定要加.summa
 print(result)                            # 如果不加.summary()
 <statsmodels.regression.linear_model.RegressionResultsWrapper object at 0x000001550CB1BB80>
 ```
-**multiple regression 多个x值**
-可以用来做Ceteris paribus analysis其他条件不变分析 因为可以清晰地控制其他变量不变  
+#### multiple regression 多个x值
+**可以用来做Ceteris paribus analysis其他条件不变分析**  
+因为可以清晰地控制其他变量不变  
 在simple regression中 一个x的改变 可能会影响到其他x的变化
 ``` python
 model = smf.ols('sales ~ TV + radio + newspaper', data = data)       # 多个x值用+相连接
@@ -68,4 +69,43 @@ radio        0.008611
 newspaper    0.005871
 dtype: float64
 ```
+**对于dataframe中的某一列进行改变 并放入回归中**
+``` python
+wage['rooted_exper'] = np.sqrt(wage['exper'])                # 虽然wage['exper']输出的是series 但也可以用numpy包里的function来开方
+model2 = smf.ols('wage ~ exper + rooted_exper', data = wage)
+result2 = model2.fit()
+print(result2.summary())
+
+# 更简单的方法是直接在回归的时候改变形式
+model2 = smf.ols('wage ~ exper + np.sqrt(exper)', data = wage)  # 注意np.sqrt后面直接是列明 因为用的data已经写在后面了
+```
+**关于categorical variables**
+categorical information is captured by a binary variable or a dummy variable 会新建dummy variable  
+以alphabetically顺序 在前面的当作base 其他是dummy
+``` python
+subset = condo.loc[(condo['district_code']==5) & (condo['area']<1500) & (condo['remaining_years']<=99)]
+model = smf.ols('price ~ type + area', data=subset)   # type是categorical area是numerical
+result = model.fit()
+print(result.summary())  # 自动生成一列T.Resale 1就是resale
+```
+![image](https://user-images.githubusercontent.com/105503216/172107107-993a7b43-c2e4-45c0-a9b1-de0aafd33c16.png)
+  
+有时候虽然某一列是数字形式 但是不应该把它当作数字处理 比如街区号  
+这时候需要把数字转化为categorical来处理  
+``` python
+model = smf.ols('price ~ C(district_code) + area', data=subset)  # 通过function C()来实现转化
+result = model.fit()
+print(result.summary())
+```
+**关于interaction term**
+``` python
+model = smf.ols('price ~ type*area', condo_subset)                # *是直接create3个terms
+# 或者
+model = smf.ols('price ~ type + area + type:area', condo_subset)  # 用:可以只创造交叉项
+
+result = model.fit()
+print(result.summary())
+```
+![image](https://user-images.githubusercontent.com/105503216/172127509-884e2ba2-f95a-41d8-b68d-7bc61468ff6f.png)
+
 # Predictive modeling
