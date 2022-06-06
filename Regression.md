@@ -236,7 +236,7 @@ cross_val_score(pipe, data[['x']], data['y'], cv=4)         # Perform cross-vali
 ```
 
 ## 使用`GridSearchCV`确定poly的最优解
-此外 为了找到poly的最优解 即从 x `x**2` `x**3` ... `x**k `中的k是多少  
+为了找到poly的最优解 即从 x `x**2` `x**3` ... `x**k `中的k是多少  
 ``` python
 from sklearn.model_selection import GridSearchCV                 # Import the grid search tool 和split cross-validation一样
 
