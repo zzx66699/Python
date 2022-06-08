@@ -222,9 +222,13 @@ regr = LinearRegression()                                # 需要预先设立回
 
 cross_val_score(regr, x, data['y'], cv=4)                # 并不需要特别有train test分离那一步 在这里直接做了
 array([0.89938951, 0.92439518, 0.9663815 , 0.91419212])  # 这个系数的结果也是直接出来的 不需要像train_test_split那样再fit
+
+# 可以求平均R^2
+cross_val_score(regr, x, data['y'], cv=4).mean()
 ```
 除了这种复杂的写法 可以用`Pipeline`函数简化
 ``` python
+from sklearn.pipeline import Pipeline                   # Import the pipeline
 k = 5
 steps = [
     ('poly', PolynomialFeatures(k, include_bias=False)),    # Step 1: polynormial transformation
@@ -235,7 +239,7 @@ pipe = Pipeline(steps)                                      # Create a pipeline
 cross_val_score(pipe, data[['x']], data['y'], cv=4)         # Perform cross-validation 在这里明确是对什么样的数据构建 注意x一定要是2维的 （DadaFrame或2维array）
 ```
 
-## 使用`GridSearchCV`确定poly的最优解
+## 使用`GridSearchCV`网格搜索来调参确定poly的最优解
 为了找到poly的最优解 即从 x `x**2` `x**3` ... `x**k `中的k是多少  
 ``` python
 from sklearn.model_selection import GridSearchCV                 # Import the grid search tool 和split cross-validation一样
@@ -247,7 +251,7 @@ steps = [
 ]                        
 
 pipe = Pipeline(steps)                                           # Create a pipline
-search = GridSearchCV(pipe, param, cv=4)                         # Create a grid search for the best parameter 
+search = GridSearchCV(pipe, param, cv=4)                         # folder是4 cross-validation的层数是4
 search.fit(data[['x']], data['y'])                               # Fit the model with the x and y data  这里又像普通分层了
 
 k_best = search.best_params_['poly__degree']                   
@@ -262,4 +266,139 @@ array([  0.53389763,   0.51298326,   0.66893669,   0.84719287,   # 因为param�
          0.92608958,   0.91787972,   0.91146481,   0.90729571,
          0.9103041 ,   0.9250095 ,   0.84647308,   0.42031482,
         -1.60123746, -23.24696963, -11.09599076])
+```
+
+## Regularized linear models 正则化
+防止过度拟合  
+正如ols的原则是让ssr最小一样 ridge和lasso回归的原则分别是
+![image](https://user-images.githubusercontent.com/105503216/172585550-f3fe78d3-3e39-4721-8ac3-91acccd36c02.png)
+
+注意一开始处理数据时 要特别处理categorical variable
+``` python
+data = pd.read_csv('credit.csv')
+data
+  Income	Limit	Rating	Cards	Age	...	Gender	Student	Married	  Ethnicity	Balance
+0	14.891	3606	283	     2	  34	...	Male	  No    	Yes     	Caucasian	333
+1	106.025	6645	483	     3	  82	...	Female	Yes	    Yes     	Asian	    903
+2	104.593	7075	514	     4	  71	...	Male	  No	    No      	Asian	    580
+3	148.924	9504	681	     3	  36	...	Female	No	    No      	Asian	    964
+4	55.882	4897	357	     2	  68	...	Male	  No	    Yes     	Caucasian	331
+
+# 手动添加dummy variable ols可以自动改变categorical ridge这里好像不可以
+# 如果没有drop_first=True 每列是：Gender_ Male	Gender_Female	Student_No	Student_Yes	Married_No	Married_Yes	..
+# 有了drop_first=True之后 每列是：Gender_Female	Student_Yes	Married_Yes	
+data_num = pd.get_dummies(data, drop_first=True)                       # 这里的drop_first=True是把base column删去
+data_num
+	Income	Limit	Rating	Cards	Age	...	Gender_Female	Student_Yes	Married_Yes	Ethnicity_Asian	Ethnicity_Caucasian
+0	14.891	3606	283	    2	    34	...	0	              0	         1	          0	             1  
+1	106.025	6645	483	    3	    82	...	1	              1	         1	          1	             0
+2	104.593	7075	514	    4	    71	...	0	              0	         0	          1              0
+3	148.924	9504	681	    3	    36	...	1	              0	         0	          1	             0
+4	55.882	4897	357	    2	    68	...	0	              0	         1	          0	             1
+```
+
+### Ridge regression
+在ridge regression使得b1 b2 ... bj的系数接近0 但不会=0 也就是说不会把variable筛选掉
+``` python
+# 下面的方法grid search类似 都是寻找最优的alpha param： 
+# 1.对于每一个alpha 找到最拟合的b1 b2 ... bj 让上面的那个min的式子最小 
+# 2.对于每一个alpha 求出拟合之后的R2
+# 3.选出R2最大的时候的alpha
+param = {'ridge__alpha': 10**np.arange(-5, 4.5, 0.5)}           # Vary the alpha parameter
+steps = [
+    ('scaler', StandardScaler()),                               # Step 1: Standardized scaler
+    ('ridge', Ridge()),                                         # Step 2: ridge regression
+]
+
+pipe = Pipeline(steps)                                          # Create a pipline
+search = GridSearchCV(pipe, param, cv=4)                        # Create a grid search for the best parameter 
+x, y = data_num.drop(columns='Balance'), data_num['Balance']    # Predictor and predicted variables
+search.fit(x, y)                                                # Fit the model with the x and y data
+
+alpha_best = search.best_params_['ridge__alpha']                  
+print('Best parameter: {0:0.5f}'.format(alpha_best))            # Best paramter
+print('Best score: {0:0.3f}'.format(search.best_score_))        # R-squared value for the best parameter
+Best parameter: 0.03162
+Best score: 0.951
+```
+### Lasso
+lasso会让某些b1 b2 ... bj的值=0 所以会把一些variable给筛选掉 适合多变量的取舍
+``` python
+param = {'lasso__alpha': 10**np.arange(-5, 5.1, 0.1)}           # Vary the alpha parameter
+steps = [
+    ('scaler', StandardScaler()),                               # Step 1: Standardized scaler
+    ('lasso', Lasso(max_iter=1e5))                              # Step 2: LASSO
+]                        
+
+pipe = Pipeline(steps)                                          # Create a pipline
+search = GridSearchCV(pipe, param, cv=4)                        # Create a grid search for the best parameter 
+x, y = data_num.drop(columns='Balance'), data_num['Balance']    # Predictor and predicted variables
+search.fit(x, y)                                                # Fit the model with the x and y data
+
+alpha_best = search.best_params_['lasso__alpha']                  
+print('Best parameter: {0}'.format(np.round(alpha_best, 3)))    # Best paramter
+print('Best score: {0:0.3f}'.format(search.best_score_))        # R-squared value for the best parameter
+Best parameter: 0.501
+Best score: 0.951
+```
+## Dimension reduction 降维
+原来很多变量之间有很强的相关性highly correlated
+principal components are linear combinations of the original independent variables 主成分是原来独立变量的线性combination  
+and the variances along the selected dimensions are maximized. 让剩下来的维度的方差最大
+![image](https://user-images.githubusercontent.com/105503216/172603714-da806348-47c3-4a3b-88c7-ade69c14b214.png)
+本来每一个点需要用assault和murder两个维度来表示 现在只需要用一个维度来表示了
+``` python
+from sklearn.preprocessing import StandardScaler        # Import standardization tool 这个function直接standardize
+from sklearn.decomposition import PCA                   # Import the PCA tool 主成分
+
+usa = pd.read_csv('USArrests.csv')
+usa.head(5)
+  States	Murder	Assault	UrbanPop	Rape
+0	Alabama	13.2	236	58	21.2
+1	Alaska	10.0	263	48	44.5
+2	Arizona	8.1	294	80	31.0
+3	Arkansas	8.8	190	50	19.5
+4	California	9.0	276	91	40.6
+
+x = usa.drop(columns='States')              # All columns except 'States'
+x_std = StandardScaler().fit_transform(x)   # Standardization of the variable
+
+nc = 2                                      # Number of principal components  只要2个主成分
+pca = PCA(n_components=nc)                  # Create a PCA object and specify the number of components
+
+z = pd.DataFrame(pca.fit_transform(x_std),  # Derive the principal components using the PCA object
+                 columns=['PC1', 'PC2'])    # Convert the array to a data frame 这是在命名
+z.head(5)                                   # 每一个点 都在新生成的两个主成分的维度下有了数值
+  PC1	      PC2
+0	0.985566	1.133392
+1	1.950138	1.073213
+2	1.763164	-0.745957
+3	-0.141420	1.119797
+4	2.523980	-1.542934
+```
+![image](https://user-images.githubusercontent.com/105503216/172611245-dba01f71-9bcb-4175-a73b-68e25bfd9e02.png)
+可以求出每个系数的值
+``` python
+pd.DataFrame(pca.components_.T,         # Transpose of the components_ attribute
+             columns=['PC1', 'PC2'],    # Column labels
+             index=x.columns)           # Row indices
+        PC1	      PC2
+Murder	0.535899	0.418181
+Assault	0.583184	0.187986
+UrbanPop	0.278191	-0.872806
+Rape	0.543432	-0.167319
+```
+举一个例子 先PCA 再进行cross validation
+``` python
+x = hitters_num.drop(columns='Salary')
+y = hitters_num['Salary']
+
+nc = 4
+steps = [
+    ('scaler', StandardScaler()),           # Step 1: Standardize all predictor variables
+    ('pca', PCA(n_components=nc)),          # Step 2: PCA transformation
+    ('lr', LinearRegression())              # Step 3: linear regression
+]        
+pipe = Pipeline(steps)                      # Create a pipeline
+cross_val_score(pipe, x, y, cv=10).mean()   # Average R^2 from 10-fold cross-validation
 ```
