@@ -229,6 +229,18 @@ data_frame.iloc[:, :5]                       # position也同理
 
 ```
 
+**方法三：只去除一列时 直接用.drop()**
+``` python
+data_num
+400 rows × 12 columns
+
+x = data_num.drop(columns='Balance')     # 这个式子不是直接在原数据上的改变 有返回值
+x
+400 rows × 11 columns
+
+y = data_num['Balance']                  # 很容易就能进行x y分离
+  
+```
 ### 只切行
 ``` python
 # 取前3行 用切片方法可以不加列的,:
@@ -520,6 +532,12 @@ wage	1.000000	0.405903	 0.112903  0.228817
 educ	0.405903	1.000000	 -0.299542 0.068881
 exper	0.112903	-0.299542 1.000000  0.316984
 married	0.228817	0.068881	 0.316984  1.000000
+```
+还可以通过图像来比对每两个变量之间的关系
+``` python
+import seaborn as sns
+pplt = sns.pairplot(data)       # 这一步就已经可以画出图形了
+pplt.fig.set_size_inches(6,6)   # 这里是调整图形大小
 ```
 
 ## (4) 处理missing value
