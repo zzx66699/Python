@@ -23,6 +23,12 @@ plt.plot(x, y,
 | 5          |      |       |  ‘w’ white   |
 | 6          |      |       |  ‘y’ yellow    |
 | 7          |      |       |  ‘k’ black  |  
+### 水平线
+``` python
+plt.hlines(1, xmin=0, xmax=2700, linestyle='--')       # y是1 
+plt.hlines(0, xmin=0, xmax=2700, linestyle='--')       
+```
+![image](https://user-images.githubusercontent.com/105503216/173235623-93dd227a-7c9b-497a-a22d-d83e0de39d17.png)
 
 ## scartter 点图
 ``` python
