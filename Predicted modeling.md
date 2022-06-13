@@ -2,6 +2,35 @@
 ![image](https://user-images.githubusercontent.com/105503216/172146515-43a4ace0-aa5c-4951-acb8-8d04f0a7c23d.png)
   **核心：scikit_learn这个包在机器学习中经常用到 在后面加上不同的function采用不同的回归方法**  
 注意在写的时候 这个包是sklearn.  
+## 所有import汇总
+``` python
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from numpy import random as rd
+
+pd.set_option("display.max_columns", 10, 
+              "display.max_rows", 7)                    # Diaply configuration of Pandas data frame
+
+from sklearn.pipeline import Pipeline 
+from sklearn.model_selection import cross_val_score  
+from sklearn.model_selection import cross_val_predict
+from sklearn.model_selection import ShuffleSplit
+from sklearn.model_selection import KFold
+from sklearn.model_selection import GridSearchCV        
+from sklearn.preprocessing import MinMaxScaler
+
+from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC 
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
+from sklearn.neighbors import KNeighborsClassifier
+
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import auc
+from sklearn.metrics import roc_curve
+```
 
 ## 普通步骤
 ### 建立多项式（这一步是因为本数据集x太少了 正常数据集可以掠过这一步）
@@ -346,12 +375,22 @@ plt.show()
 ![image](https://user-images.githubusercontent.com/105503216/173237886-a6197d25-f14a-44f3-9d70-be386b8e640b.png)
 ### cross validation
 ``` python
-from aklearn.model_selection import cross_val_score
 x = credit_num[['balance']]                            
 y = credit_num[['default_yes']]
 
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import cross_val_predict
 regr = LogisticRegression() 
 y_pred = cross_val_predict(regr, x, y, cv=4)                   # 用原x y拟合 把原x带回拟合的式子中去预测y_predict
+
+
+# 可以顺便求一下r*2 但事实上在cross validation中r^2并不重要
+from aklearn.model_selection import cross_val_score
+cross_val_score(regr, x, y, cv=4)                             
+array([0.9708, 0.9728, 0.972 , 0.974 ])
+
+# 重要的是confusion matrix 看正确预测的概率有多少 这里是按照默认0.5的threshold来划分0和1的
+from sklearn.metrics import confusion_matrix
 confusion = confusion_matrix(y, y_pred, normalize='true')      # 建立confusion matrix
 confusion
 array([[0.99565532, 0.00434468],
@@ -360,13 +399,24 @@ array([[0.99565532, 0.00434468],
 pd.DataFrame(confusion, 
              index=['True not default', 'True default'], 
              columns=['Predicted not default', 'Predicted default'])
-                  Predicted not default	   Predicted default
+                  Predicted not default	               Predicted default
 True not default	0.995655	               0.004345
-True default	    0.702703	               0.297297
+True default	        0.702703	               0.297297
 
-# 可以顺便求一下r*2 但事实上在cross validation中r^2并不重要
-cross_val_score(regr, x, y, cv=4)                             
-array([0.9708, 0.9728, 0.972 , 0.974 ])
-
+# 这里可以看一下事实上的概率是多少
+y_proba = cross_val_predict(regr, x, y, cv=4, method='predict_proba')
+y_proba                                                       # 依旧第二列是default_yes = 1的概率
+array([[9.98645434e-01, 1.35456646e-03],
+       [9.97824410e-01, 2.17558988e-03],
+       [9.91337533e-01, 8.66246725e-03],
+       ...,
+       [9.97656620e-01, 2.34337970e-03],
+       [8.81030900e-01, 1.18969100e-01],
+       [9.99936376e-01, 6.36236742e-05]])
+       
+```
+下面通过交点来确定最优的theshold
+``` python
+from sklearn.metrics import roc_curve
 
 ```
