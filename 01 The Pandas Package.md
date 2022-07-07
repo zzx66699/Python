@@ -443,7 +443,7 @@ not_female
 5     True
 Name: gender, dtype: bool
 ```
-### 和loc一起使用 筛选目标列
+### 和loc一起使用 筛选目标行
 boolean pandas.Series最重要的用法就是去Select rows indicated by True
 ``` python
 is_female = data_frame['gender'] == 'Female'    # A boolean Series 
@@ -518,8 +518,20 @@ print(dara.select_dtypes(exclude='object').max())
 使用.unique()获取不重复的值 结果是array表示
 ``` python
 condo['segment'].unique()
+
+---
 array(['CCR', 'RCR', 'OCR'], dtype=object)
 ```
+可以把结果采用其他形式展现
+``` python
+import pandas as pd
+iris = pd.read_csv('iris.csv', sep=',')
+types = iris['type'].unique()
+for i in types:
+    print(i)
+```
+![image](https://user-images.githubusercontent.com/105503216/177712737-df38f549-a319-4f13-a09a-a89d1d284b71.png)  
+
 也可以把用于总数据的方法单独用在一列上
 ``` python
 print(data['wage'].min())
