@@ -2,10 +2,9 @@
 ``` python
 import pandas as pd                 # Import the pandas package for data frames
 ```
-## 基础概念 pandas.Series & pandas.DataFrame
-### pandas.Series
+## pandas.Series 基础概念
 一维的索引数组 one-dimensional array of indexed data  
-#### 构建转变
+### 构建转变
 可以从其它的一维数组创建而来，包括list和一维numpy.array  
 从list转变
 ``` python
@@ -41,7 +40,7 @@ index = ['Mary', 'Ann', 'John', 'David', 'Frank', 'Ben']
 exper = pd.Series([2.0, 22.0, 2.0, 44.0, 7.0, 9.0], 
                index = index)                              
 ```
-#### 查看基础特征 
+### 查看基础特征 
 查看values
 ``` python
 wage.values        
@@ -53,9 +52,9 @@ wage.index
 --- RangeIndex(start=0, stop=6, step=1)                 # The data type of index is RangeIndex by default
 ```
 
-### pandas.DataFrame
+## pandas.DataFrame 基础概念
 二维的索引数组 one-dimensional array of indexed data  
-#### 构建转变
+### 构建转变
 可以从其它的二维数组创建而来，包括dictionary和numpy.array  
 从dictionary转变
 ``` python
@@ -90,7 +89,7 @@ Frank	5.30	12.0	7.0	Male	True
 Ben	8.75	16.0	9.0	Male	True
 ```
 
-#### 查看基础特征 都是不需要（）的
+### 查看基础特征 都是不需要（）的
 列名
 ``` python
 price_info.columns   
