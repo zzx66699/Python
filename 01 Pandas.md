@@ -158,15 +158,25 @@ Frank	5.30	12.0	7.0	Male	True
 Ben	8.75	16.0	9.0	Male	True
 ```
 
-## 查看基础特征 行名和列名column和index
+## 查看基础特征 都是不需要（）的
+列名
 ``` python
-price_info.columns       
-Index(['count', 'median', 'max', 'min'], dtype='object')    
+price_info.columns   
 
+Index(['count', 'median', 'max', 'min'], dtype='object')    
+```
+行名
+``` python
 price_info.index   
+
 Index(['CCR', 'OCR', 'RCR'], dtype='object', name='segment')
 ```
+行列数目
+``` sql
+price_info.shape
 
+(150, 5)
+```
 ## 切片
 ### 只切列
 **方法一：直接[]，不用loc/iloc**  
