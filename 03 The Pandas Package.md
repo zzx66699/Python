@@ -53,7 +53,9 @@ wage.index
 ```
 
 ## pandas.DataFrame 基础概念
-二维的索引数组 one-dimensional array of indexed data  
+二维的索引数组 one-dimensional array of indexed data 
+![image](https://user-images.githubusercontent.com/105503216/177738534-9dbecfd6-ef89-4c02-8132-27cd8fa9337c.png)
+
 ### 构建转变
 可以从其它的二维数组创建而来，包括dictionary和numpy.array  
 从dictionary转变
