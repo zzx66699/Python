@@ -1,4 +1,4 @@
-# Chapter1 The Pandas Package
+# Chapter3 The Pandas Package
 ``` python
 import pandas as pd                 # Import the pandas package for data frames
 ```
