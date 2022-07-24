@@ -111,8 +111,8 @@ price_info.shape
 (150, 5)
 ```
 
-#### 切片
-pd.Series有两种方法： 
+## 切片
+### pd.Series有两种方法： 
 1. label based indice 基于label标签的index/indice索引 series.loc[] 包含  
 2. integer-position based indice 基于position位置的索引 series.iloc[] 不包含  
 ``` python
@@ -187,10 +187,8 @@ print(wage.loc[-2:])                                           # Print the last 
 dtype: float64
 ```
 
-
-
-## 切片
-### 只切列
+### DataFrame切片
+#### 只切列
 **方法一：直接[]，不用loc/iloc**  
 此方法只能单独提取，不可以slicing
 ``` python
@@ -263,7 +261,7 @@ x
 y = data_num['Balance']                  # 很容易就能进行x y分离
   
 ```
-### 只切行
+#### 只切行
 ``` python
 # 取前3行 用切片方法可以不加列的,:
 data_frame.loc[:2]                                           # 用loc表达
@@ -275,7 +273,7 @@ data_frame.iloc[0:3]                                         # 用iloc表达
 # 为方便记忆 建议都写完整比较好
 ```
 
-### 有行有列
+#### 有行有列
 ``` python
 # A subset containing the 2nd and the 3rd  columns, and the 2nd and the 3rd rows
 
@@ -287,7 +285,7 @@ data_new_subset = data_frame_new.iloc[1:3, 1:3]             # 用iloc表达 注�
 2	11.0	2.0
 ```
 
-### 只筛选一列/一行的情况
+#### 只筛选一列/一行的情况
 用label_based筛选时 bracket数量决定了输出的是series还是dataframe
 ``` python
 # 行
