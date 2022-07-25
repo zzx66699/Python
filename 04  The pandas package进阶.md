@@ -50,8 +50,8 @@ print(data.select_dtypes(exclude='object').std())             # 标准差
 print(data.select_dtypes(exclude='object').var())             # 方差
 ```
 这里需要特别注意
-df.var()默认的ddof=1 是用来算样本方差的 标准差公式根号内除以 n-1
-np.var(xx)默认的ddof=0 是用来算总体标准偏差 标准差公式根号内除以 n  
+df.var()默认的ddof=1 是用来算样本方差的 标准差公式根号内除以 n-1  
+np.var(xx)默认的ddof=0 是用来算总体标准偏差 标准差公式根号内除以 n   
 EXERCISE:  
 请你计算类型为“Iris-seosa”的鸢尾花的花萼长度、花萼宽度、花瓣长度、花瓣宽度的方差  
 ``` python
