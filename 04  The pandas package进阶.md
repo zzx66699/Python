@@ -82,7 +82,7 @@ print(result.quantile([0.25, 0.50, 0.75]))    # 注意这里是0.50 此外 注�
 ```
 
 ## (2) 获得每一列数据的特征
-使用.unique()获取不重复的值 结果是array表示
+### 使用.unique()获取不重复的值 结果是array表示
 ``` python
 condo['segment'].unique()
 
@@ -99,20 +99,11 @@ for i in types:
 ```
 ![image](https://user-images.githubusercontent.com/105503216/177712737-df38f549-a319-4f13-a09a-a89d1d284b71.png)  
 
-也可以把用于总数据的方法单独用在一列上
-EXERCISE1:  
-<img width="856" alt="image" src="https://user-images.githubusercontent.com/105503216/180678220-b103423a-c10d-4cad-b735-b5afc7f7798d.png">
+### 也可以把用于总数据的方法max\min\median\var....单独用在一列或者选取的多列上
+#### 对多列用一种输出方法 结果是一列的series   
+<img width="493" alt="image" src="https://user-images.githubusercontent.com/105503216/180693469-b0bd1a37-6d02-400e-8959-7dac30bfdd5f.png">  
 
-``` python
-import pandas as pd
-iris = pd.read_csv('iris.csv', sep=',')
-max1 = iris.loc[iris['type']=='Iris-setosa','SepalLen'].max()        # 在table中找type是Iris-setosa的那几行中SepalLen的最大值
-max2 = iris.loc[iris['type']=='Iris-versicolor','SepalLen'].max()
-result = round(max2 - max1, 1)
-print(result)
-```
-
-EXERCEISE2:  
+EXERCEISE:  
 你计算类型为“Iris-seosa”的鸢尾花的花萼长度、花萼宽度、花瓣长度、花瓣宽度的均值  
 ``` python
 import pandas as pd
@@ -126,7 +117,15 @@ iris = pd.read_csv('iris.csv', sep=',')
 print(np.mean(iris.loc[iris['type']=='Iris-setosa','SepalLen':'PetalWid']))  # np.mean()
 ```
 
-求某个categorical variable各value的占比
+#### 对一列用多种输出方法 必须一个一个写（每一个输出的是数字） 之后一般用pd.DataFrame整合 
+每一个： <img width="169" alt="image" src="https://user-images.githubusercontent.com/105503216/180692027-cd30eb47-5035-4e54-a15d-16950543f1fe.png">   
+整合起来也是一列 此时index是每种输出方法 column是列名   
+<img width="448" alt="image" src="https://user-images.githubusercontent.com/105503216/180692233-f76d2540-7e41-43fe-8b35-8465a5af67d3.png">  
+按照相应的格式修改  
+<img width="806" alt="image" src="https://user-images.githubusercontent.com/105503216/180692754-583c1292-8ada-4433-8e22-4b7b4557f8c2.png">  
+
+
+### 求某个categorical variable各value的占比
 ``` python
 # value=某个值的占比
 print((data['gender']=='male').mean())                # 记得要加括号
