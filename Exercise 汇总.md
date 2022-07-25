@@ -85,3 +85,8 @@ df = pd.concat([df1, df2], axis=1)             # 不相同的index也可以直�
 print(df)
 ```
 
+``` sql
+f = pd.read_csv(feed.csv)
+fc = pd.read_csv(feed_comment.csv)
+
+```
