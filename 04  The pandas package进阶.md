@@ -184,6 +184,14 @@ gdp.loc[:,'1960':'1961'].isnull()     # 返回的是boolean
 213	False	False
 214	False	False
 ```
+判断每列是否有空值 每列只输出一个
+
+``` python
+print(Nowcoder.isnull().any(axis=0))
+```
+<img width="241" alt="image" src="https://user-images.githubusercontent.com/105503216/181028993-6c987583-fa92-41f7-ba46-7e54202b6fbb.png">
+
+
 ### select 筛选 notnull()
 ``` python
 gdp_1960 = gdp.loc[gdp['1960'].notnull(),       # Select rows
