@@ -22,6 +22,11 @@ range_array = np.arange(2, 5, 0.5)                                          # �
 np.arange(3)   --- 0，1，2
 ```
 
+### 随机生成
+``` python
+data=np.random.randint(0,100, size=(8,6))
+```
+
 ## 查看基础特征
 ``` python
 data.ndim                                          # 查看维度
