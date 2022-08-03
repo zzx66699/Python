@@ -81,6 +81,10 @@ df.quantile(xx)
 print(result.quantile([0.25, 0.50, 0.75]))    # 注意这里是0.50 此外 注意多个分位数在一起的写法 
 ```
 
+### 众数
+.mode()
+
+
 ## (2) 获得每一列数据的特征
 ### 使用.unique()获取不重复的值 结果是array表示
 ``` python
@@ -98,6 +102,33 @@ for i in types:
     print(i)
 ```
 ![image](https://user-images.githubusercontent.com/105503216/177712737-df38f549-a319-4f13-a09a-a89d1d284b71.png)  
+
+### 使用nunique()获取不重复值的数量 结果是int
+``` python
+Nowcoder = pd.read_csv('Nowcoder.csv', sep=',')
+language = Nowcoder['Language'].unique()
+count = Nowcoder['Language'].nunique()
+print(count, '\n', language)
+```
+
+### 求某个categorical variable各value的占比!!数量！！！
+``` python
+# value=某个值的占比
+print((data['gender']=='male').mean())                # 记得要加括号
+0.5209125475285171                                    # 输出的是单独的string
+
+# 各个value的数量
+print(data['gender'].value_counts())                  # 输出的是pd.Series
+Male      274
+Female    252
+Name: gender, dtype: int64
+
+# 各个value的占比
+print(data['gender'].value_counts(normalize=True))
+Male      0.520913
+Female    0.479087
+Name: gender, dtype: float64
+```
 
 ### 也可以把用于总数据的方法max\min\median\var....单独用在一列或者选取的多列上
 #### 对多列用一种输出方法 结果是一列的series   
@@ -124,25 +155,6 @@ print(np.mean(iris.loc[iris['type']=='Iris-setosa','SepalLen':'PetalWid']))  # n
 按照相应的格式修改  
 <img width="806" alt="image" src="https://user-images.githubusercontent.com/105503216/180692754-583c1292-8ada-4433-8e22-4b7b4557f8c2.png">  
 
-
-### 求某个categorical variable各value的占比
-``` python
-# value=某个值的占比
-print((data['gender']=='male').mean())                # 记得要加括号
-0.5209125475285171                                    # 输出的是单独的string
-
-# 各个value的数量
-print(data['gender'].value_counts())                  # 输出的是pd.Series
-Male      274
-Female    252
-Name: gender, dtype: int64
-
-# 各个value的占比
-print(data['gender'].value_counts(normalize=True))
-Male      0.520913
-Female    0.479087
-Name: gender, dtype: float64
-```
 
 ## (3) correlation
 ``` python
