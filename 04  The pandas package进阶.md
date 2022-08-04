@@ -437,6 +437,9 @@ condo['level_from'] = condo['level'].str[:2].astype(int)    # 如果不加.str�
 condo['level_to'] = condo['level'].str[-2:].astype(int)     # astype()可以改变type astype在使用的时候前面不用加str 这里是为了切片才加的str 
 # 同时有返回值 不是在原dataframe上的改变 所以需要赋值
 ```
+### 3.求每个字符串的长度
+Nowcoder['Name'].str.len()
+
 ## (8) 按照某一列重新排序 .sort_values()
 Considering Singapore condos in the district 5, show the monthly trends of  
 1) the average unit prices; and 2) the number of transactions, in recent years.
