@@ -74,6 +74,14 @@ print(np.var(v))
 print(data.select_dtypes(exclude='object').min())
 print(dara.select_dtypes(exclude='object').max())
 ```
+注意需要把前面的部分()起来  !!!!! 
+
+``` python
+ne = Nowcoder.loc[Nowcoder['Num_of_exercise']>10,'Num_of_exercise'] 
+ns = Nowcoder.loc[Nowcoder['Num_of_exercise']>10,'Number_of_submissions']
+max_c = (ne/ns).max()   # 计算结果的max 要把计算过程()  
+print(round(max_c,3))
+```
 
 ### 几分位点
 df.quantile(xx) 
