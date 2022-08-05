@@ -180,6 +180,13 @@ pplt = sns.pairplot(data)       # 这一步就已经可以画出图形了
 pplt.fig.set_size_inches(6,6)   # 这里是调整图形大小
 ```
 
+## 分组 .groupby()
+df.groupby('按照xx分组的列')['要进行操作的列'].操作方式()  
+
+EXAMPLE:  
+``` python
+n = nowcoder.groupby('date')['question_id'].count()
+```
 
 ## (5) 按分组将多列同时进行多种操作
 ### aggregate 每一组只输出一个值 所以输出的行数=组别数
