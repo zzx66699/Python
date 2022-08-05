@@ -377,25 +377,10 @@ outcome
 ```
 ![image](https://user-images.githubusercontent.com/105503216/171838747-2224a4b5-e0fa-484e-b527-266311cc71b6.png)
 
-## (6) 关于时间的处理方法
-pd.to_datetime()把str变成Time series data  
-这个网页是年月日表示:https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior
-``` python
-time = pd.to_datetime(condo['date'], format='%b-%y')
-time
-0       2019-11-01
-1       2019-11-01
-2       2019-11-01
-3       2019-11-01
-4       2019-11-01
-           ...    
-32163   2016-11-01
-32164   2016-11-01
-32165   2016-11-01
-32166   2016-11-01
-32167   2016-11-01
-Name: date, Length: 32168, dtype: datetime64[ns]
-```
+## (6) 关于时间的处理方法 pd.to_datetime(xx, '想要转变成为的格式')
+把str变成Time series data   
+这个网页是年月日表示:https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior  
+
 实例 Create a new dataset with all condo transactions from January 2018 to June 2018
 ``` python
 # 首先转变成datetime的格式 并加入dataframe中
