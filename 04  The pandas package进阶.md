@@ -401,7 +401,14 @@ outcome = condo.loc[(condo['time'] <= r[0]) & (condo['time'] >= r[1])]   # 再�
 outcome.reset_index(drop=True,inplace=True)
 outcome
 ```
-![image](https://user-images.githubusercontent.com/105503216/171841923-056dc369-532d-467c-ac09-0de9f99b584d.png)
+![image](https://user-images.githubusercontent.com/105503216/171841923-056dc369-532d-467c-ac09-0de9f99b584d.png) 
+
+### 把有时间日期的变成只有日期的 .dt.date
+<img width="327" alt="image" src="https://user-images.githubusercontent.com/105503216/183033909-72ad0dac-04a6-4e96-adad-b1e49ff57b75.png">  
+``` python
+b['date_x'] = pd.to_datetime(b['date']).dt.date  
+```
+<img width="224" alt="image" src="https://user-images.githubusercontent.com/105503216/183034085-a25e23c6-cdfa-4dda-89bc-838fdc8234c7.png">
 
 ### 时间差 from datetime import timedelta
 相当于sql里的interval xx days
