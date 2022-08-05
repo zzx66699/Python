@@ -403,6 +403,14 @@ outcome
 ```
 ![image](https://user-images.githubusercontent.com/105503216/171841923-056dc369-532d-467c-ac09-0de9f99b584d.png)
 
+### 时间差 from datetime import timedelta
+相当于sql里的interval xx days
+``` python
+df['date_1'] = df['date_2'] + timedelta(day=1)
+```
+
+
+
 ## (7) 矢量化字符串操作Vectorized string operations
 通过`str`矢量化字符串  
 ### 1.lower（）变成小写
