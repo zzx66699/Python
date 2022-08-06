@@ -405,6 +405,7 @@ outcome
 
 ### 把有时间日期的变成只有日期的 .dt.date
 <img width="327" alt="image" src="https://user-images.githubusercontent.com/105503216/183033909-72ad0dac-04a6-4e96-adad-b1e49ff57b75.png">  
+
 ``` python
 b['date_x'] = pd.to_datetime(b['date']).dt.date  
 ```
