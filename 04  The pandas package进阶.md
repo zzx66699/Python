@@ -185,8 +185,16 @@ df.groupby('按照xx分组的列')['要进行操作的列'].操作方式()
 
 EXAMPLE:  
 ``` python
-n = nowcoder.groupby('date')['question_id'].count()
+n = nowcoder.groupby('date')['question_id'].count()    # 一定要加数xxx
 ```
+根据两个条件分组  
+
+``` python
+nowcoder['year-month-day']= pd.to_datetime(nowcoder['date']).dt.date
+df = nowcoder.groupby(['result','year-month-day'])['year-month-day'].count()
+print(df)
+```
+<img width="397" alt="image" src="https://user-images.githubusercontent.com/105503216/183256387-856b23cd-87e0-4d9a-a15b-2ce6ca28557e.png">
 
 ## (5) 按分组将多列同时进行多种操作
 ### aggregate 每一组只输出一个值 所以输出的行数=组别数
