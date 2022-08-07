@@ -196,6 +196,12 @@ print(df)
 ```
 <img width="397" alt="image" src="https://user-images.githubusercontent.com/105503216/183256387-856b23cd-87e0-4d9a-a15b-2ce6ca28557e.png">
 
+``` python
+ print(df.index)     # df是series
+ ```
+ <img width="560" alt="image" src="https://user-images.githubusercontent.com/105503216/183276324-e4508f63-1b4c-4c67-8987-eed70bad384d.png">
+
+
 ## (5) 按分组将多列同时进行多种操作
 ### aggregate 每一组只输出一个值 所以输出的行数=组别数
 **单一column分组 单一column中对应的mean和std**  
