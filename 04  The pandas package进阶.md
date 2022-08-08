@@ -180,26 +180,6 @@ pplt = sns.pairplot(data)       # 这一步就已经可以画出图形了
 pplt.fig.set_size_inches(6,6)   # 这里是调整图形大小
 ```
 
-## 分组 .groupby()
-df.groupby('按照xx分组的列')['要进行操作的列'].操作方式()  
-
-EXAMPLE:  
-``` python
-n = nowcoder.groupby('date')['question_id'].count()    # 一定要加数xxx
-```
-根据两个条件分组  
-
-``` python
-nowcoder['year-month-day']= pd.to_datetime(nowcoder['date']).dt.date
-df = nowcoder.groupby(['result','year-month-day'])['year-month-day'].count()
-print(df)
-```
-<img width="397" alt="image" src="https://user-images.githubusercontent.com/105503216/183256387-856b23cd-87e0-4d9a-a15b-2ce6ca28557e.png">
-
-``` python
- print(df.index)     # df是series
- ```
- <img width="560" alt="image" src="https://user-images.githubusercontent.com/105503216/183276324-e4508f63-1b4c-4c67-8987-eed70bad384d.png">
 
 
 ## (5) 按分组将多列同时进行多种操作
@@ -344,15 +324,9 @@ MultiIndex([('female',  'First'),
             (  'male', 'Second'),
             (  'male',  'Third')],
            names=['sex', 'class'])
-	   
-# 通过unstack()可以把inner layer转化成column name
-d = d.unstack()   # 这是有返回值的
-d
-class	First	        Second	        Third
-sex			
-female	0.968085	0.921053	0.500000
-male	0.368852	0.157407	0.135447
 ```
+
+
 ### transformation 行数永远和原数据的行数一样
 例如把每个值normalize 标准化处理 去除量纲dimension 使不同数量级scale的数据能够比较
 ``` python
@@ -509,26 +483,3 @@ Name: age, dtype: category
 Categories (3, interval[int64]): [(0, 18] < (18, 50] < (50, 80]]
 ```
 
-## (10) 数据透视表 Pivot table 
-Explore the percentage of survival by sex and classes.
-``` python
-d = data_titan.pivot_table('survived', columns='class', index='sex')
-d           # 这里可以参考agg里面的多个column分组 简化写法
-class	First	        Second	        Third
-sex			
-female	0.968085	0.921053	0.500000
-male	0.368852	0.157407	0.135447
-
-d.index.name = None   # 把index和column的名字删去
-d.columns.name = None
-d
-        First	        Second	        Third
-female	0.968085	0.921053	0.500000
-male	0.368852	0.157407	0.135447
-```
-index也可以是multi layer
-``` python
-d = data_titan.pivot_table('survived', index=[age, 'sex'], columns='class') 
-# 注意这里的age都不是dataframe中的一列 是独立的variable 默认一一对应起来了
-```
-![image](https://user-images.githubusercontent.com/105503216/171981570-d42874ad-a548-4439-a5f0-113061ea748a.png)
