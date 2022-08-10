@@ -436,34 +436,6 @@ condo['level_to'] = condo['level'].str[-2:].astype(int)     # astype()可以改�
 ### 3.求每个字符串的长度
 Nowcoder['Name'].str.len()
 
-## (8) 按照某一列重新排序 .sort_values()
-Considering Singapore condos in the district 5, show the monthly trends of  
-1) the average unit prices; and 2) the number of transactions, in recent years.
-``` python
-subset = condo.loc[condo['district_code']==5]
-fun = ['mean','count']
-o = subset.groupby('time')['unit_price'].agg(fun)
-o.reset_index(inplace=True)
-o.head(5)                                # 此时是按照alphabetical的顺序排序的 我们希望按照时间顺序
-	date	mean	        count	
-0	Apr-17	1162.106195	113	
-1	Apr-18	1151.673913	46	
-2	Apr-19	1197.903226	31	
-3	Aug-17	1174.113924	79	
-4	Aug-18	1244.913043	23	
-
-# 可以新建一列datetime 按照datetime排序
-o['time']=pd.to_datetime(o['date'], format='%b-%y')  # 新建一列datetime的
-o.sort_values(by='time',inplace=True)                # 注意这里不要o.sort_values(by='time',inplace=True).reset_index(drop=True, inplace=True) 连着写
-o.reset_index(drop=True, inplace=True)               # 因为每一步都不会有返回值的 都是在对原序列操作
-o.head(5)
-date	mean	count	time
-0	Nov-16	1218.390244	41	2016-11-01
-1	Dec-16	1141.553191	47	2016-12-01
-2	Jan-17	1241.507937	63	2017-01-01
-3	Feb-17	1237.646739	184	2017-02-01
-4	Mar-17	1219.400000	160	2017-03-01
-```
 
 ## (9) 创建interval
 ``` python
@@ -483,3 +455,27 @@ Name: age, dtype: category
 Categories (3, interval[int64]): [(0, 18] < (18, 50] < (50, 80]]
 ```
 
+## 按照几分位点划分 pd.qcut()
+pd.qcut(被切的一列或者多列, q, labels=每一组的名字, retbins=False, precision=3, duplicates='raise') #最后一个参数  
+EXERCISE:
+<img width="635" alt="image" src="https://user-images.githubusercontent.com/105503216/183863467-07b5f9c8-acb7-47a5-a119-7725746f8405.png">
+
+``` python
+import pandas as pd
+sales = pd.read_csv('sales.csv')
+sales['R_Quartile'] = pd.qcut(sales['recency'], [0, 0.25, 0.5, 0.75, 1],[4,3,2,1]).astype("int")
+sales['F_Quartile'] = pd.qcut(sales['frequency'], [0, 0.25, 0.5, 0.75, 1],[1,2,3,4]).astype("int")
+sales['M_Quartile'] = pd.qcut(sales['monetary'], [0, 0.25, 0.5, 0.75, 1],[1,2,3,4]).astype("int")
+print(sales.head())
+```
+
+<img width="664" alt="image" src="https://user-images.githubusercontent.com/105503216/183874156-fb2c2c21-ec9f-4d65-90ed-33c9663e3fd7.png">
+
+``` python
+sales['RFMClass'] = sales['R_Quartile'] + sales['F_Quartile'] + sales['M_Quartile'] 
+df = sales[['user_id','recency','frequency','monetary','RFMClass']]
+print(df.head(5))
+print('\n')
+df = df.loc(sales['RFMClass']=='444').sort_values(by='monetary', ascending=False).iloc[:5].reset_index(drop=True)
+print(df)
+```
