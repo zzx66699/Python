@@ -374,7 +374,9 @@ outcome
 
 ## (6) 关于时间的处理方法 pd.to_datetime(xx, '想要转变成为的格式')
 把str变成Time series data   
-这个网页是年月日表示:https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior  
+这个网页是年月日表示:https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior    
+<img width="728" alt="image" src="https://user-images.githubusercontent.com/105503216/184271993-afc17562-e1fa-4d96-8440-6cced72e5e4e.png">  
+
 
 实例 Create a new dataset with all condo transactions from January 2018 to June 2018
 ``` python
@@ -404,8 +406,6 @@ b['date_x'] = pd.to_datetime(b['date']).dt.date
 ``` python
 df['date_1'] = df['date_2'] + timedelta(day=1)
 ```
-
-
 
 ## (7) 矢量化字符串操作Vectorized string operations
 通过`str`矢量化字符串  
