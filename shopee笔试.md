@@ -48,5 +48,5 @@ print(cnt)
 ``` python
 df2 = df1[df1['main_category'] == 'Mobile & Gadgets']
 cnt = df2.groupby('shopid')['itemid'].nunique()
-print(cnt)
+print(cnt.max().index)
 ```
