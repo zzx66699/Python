@@ -40,7 +40,7 @@ df = pd.DataFrame(data=np.random.randint(0,100,size=(100,3)),columns=['A','B','C
 #### 把0到xx-1的整数乱序排序
 
 ``` python
-# 把0-29的随机排序 不会重复
+# 把0-29的数据随机排序 不会重复
 np.random.permutation(30)  
 ```
 <img width="652" alt="image" src="https://user-images.githubusercontent.com/105503216/184530872-a40e858b-41a7-4c4c-ba9a-2c97ff6c56b4.png">
