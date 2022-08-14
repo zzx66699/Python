@@ -23,14 +23,29 @@ np.arange(3)   --- 0，1，2
 ```
 
 ### 随机生成
+data=np.random.randint(从xx数开始,到xx数不包括, size=(xx,xx))
+
 ``` python
-data=np.random.randint(0,100, size=(8,6))
+# 生成从0-29的数字！！！！一共有2行5列
+data=np.random.randint(0,30, size=(2,5))
 ```
+<img width="272" alt="image" src="https://user-images.githubusercontent.com/105503216/184530837-0b8707c1-2113-4439-8c4d-e8c1944e2a62.png">
+
 转化为df
 
 ``` python
 df = pd.DataFrame(data=np.random.randint(0,100,size=(100,3)),columns=['A','B','C'])
 ```
+
+#### 生成xx个从0到xx-1的整数
+
+``` python
+# 生成30个从0-29的整数
+np.random.permutation(30)  
+```
+<img width="652" alt="image" src="https://user-images.githubusercontent.com/105503216/184530872-a40e858b-41a7-4c4c-ba9a-2c97ff6c56b4.png">
+
+
 ## 查看基础特征
 ``` python
 data.ndim                                          # 查看维度
