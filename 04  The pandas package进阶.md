@@ -6,6 +6,32 @@ import pandas as pd
 data = pd.read_csv('wage.csv')  # Read data from a file "wage.csv"
 data.head(6)                    # Return the first six rows of data
 ```
+
+### 关于head和separator
+``` python
+df = pd.read_csv('data.csv') 
+df
+```
+<img width="99" alt="image" src="https://user-images.githubusercontent.com/105503216/184540433-1c9b2f2e-326d-40bb-8e96-68ea36c26687.png">  
+
+现在不要让第一行变成column name  
+
+``` python
+df = df.read_csv('data.csv', header=None)
+df
+```
+<img width="115" alt="image" src="https://user-images.githubusercontent.com/105503216/184540496-33b4f81e-b0da-4fbb-b5db-0e7300b4fe01.png">  
+
+用-分割  
+
+``` python
+df = df.read_csv('data.csv', header=None, sep='-')
+df
+```
+<img width="125" alt="image" src="https://user-images.githubusercontent.com/105503216/184540545-c86da51d-f1b7-4b10-98c5-fec0944463df.png">
+
+
+
 ## (1)获得总体数据的基础特征
 ### .describe()
 一键获取基础信息
