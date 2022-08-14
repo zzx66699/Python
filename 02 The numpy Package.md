@@ -26,7 +26,11 @@ np.arange(3)   --- 0，1，2
 ``` python
 data=np.random.randint(0,100, size=(8,6))
 ```
+转化为df
 
+``` python
+df = pd.DataFrame(data=np.random.randint(0,100,size=(100,3)),columns=['A','B','C'])
+```
 ## 查看基础特征
 ``` python
 data.ndim                                          # 查看维度
