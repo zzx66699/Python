@@ -1,5 +1,4 @@
-# Chapter4 The pandas package进阶
-# Descriptive analytics 
+# Chapter4 Analytics的实际应用 
 ## Read data from files
 ``` python
 import pandas as pd
@@ -30,7 +29,15 @@ df
 ```
 <img width="125" alt="image" src="https://user-images.githubusercontent.com/105503216/184540545-c86da51d-f1b7-4b10-98c5-fec0944463df.png">
 
+### 从数据库中读取
+``` python
+# 连接数据库 获取连接对象 (这一步不同的数据库创建连接对象不一样)
+import sqlite3 as sqlite3
+conn = sqlite3.connect('data.sqlite')
 
+# 读取库表中的数据值
+df = pd.read_sql('select * from weather_2012', conn)
+```
 
 ## (1)获得总体数据的基础特征
 ### .describe()
