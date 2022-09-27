@@ -1,33 +1,4 @@
-# Chapter4 Analytics的实际应用 
-## Read data from files
-``` python
-import pandas as pd
-data = pd.read_csv('wage.csv')  # Read data from a file "wage.csv"
-data.head(6)                    # Return the first six rows of data
-```
 
-### 关于head和separator
-``` python
-df = pd.read_csv('data.csv') 
-df
-```
-<img width="99" alt="image" src="https://user-images.githubusercontent.com/105503216/184540433-1c9b2f2e-326d-40bb-8e96-68ea36c26687.png">  
-
-现在不要让第一行变成column name  
-
-``` python
-df = df.read_csv('data.csv', header=None)
-df
-```
-<img width="115" alt="image" src="https://user-images.githubusercontent.com/105503216/184540496-33b4f81e-b0da-4fbb-b5db-0e7300b4fe01.png">  
-
-用-分割  
-
-``` python
-df = df.read_csv('data.csv', header=None, sep='-')
-df
-```
-<img width="125" alt="image" src="https://user-images.githubusercontent.com/105503216/184540545-c86da51d-f1b7-4b10-98c5-fec0944463df.png">
 
 ### 从数据库中读取
 ``` python
@@ -38,92 +9,6 @@ conn = sqlite3.connect('data.sqlite')
 # 读取库表中的数据值
 df = pd.read_sql('select * from weather_2012', conn)
 ```
-
-## (1)获得总体数据的基础特征
-### .describe()
-一键获取基础信息
-``` python
-data.describe()
-      wage	      educ	       exper
-count	526.000000	526.000000	526.00000
-mean	5.896103	  12.562738	  17.01711
-std	3.693086	    2.769022	  13.57216
-min	0.530000	    0.000000	  1.00000
-25%	3.330000	    12.000000	  5.00000
-50%	4.650000  	  12.000000	  13.50000
-75%	6.880000	    14.000000	  26.00000
-max	24.980000	    18.000000	  51.00000
-```
-### centers
-包括mean平均值和median中位数
-``` python 
-print(data.select_dtypes(exclude='object').mean())      # 求每一列的平均值 这里的select_dtypes(exclude='object')是把categorical variable去掉
-wage        5.896103
-educ       12.562738
-exper      17.017110
-married     0.608365
-dtype: float64 
-
-print(data.select_dtypes(exclude='object').median()))   # 每一列的中位数
-wage        4.65
-educ       12.00
-exper      13.50
-married     1.00
-dtype: float64 
-
-print(type(data.select_dtypes(exclude='object').mean()))
-<class 'pandas.core.series.Series'>                     # 输出类型都是pandas.Series
-#每一行的indice是原来的列名称variable name
-```
-
-### variations
-包括方差和标准差
-``` python
-print(data.select_dtypes(exclude='object').std())             # 标准差
-print(data.select_dtypes(exclude='object').var())             # 方差
-```
-这里需要特别注意
-df.var()默认的ddof=1 是用来算样本方差的 标准差公式根号内除以 n-1  
-np.var(xx)默认的ddof=0 是用来算总体标准偏差 标准差公式根号内除以 n   
-EXERCISE:  
-请你计算类型为“Iris-seosa”的鸢尾花的花萼长度、花萼宽度、花瓣长度、花瓣宽度的方差  
-``` python
-import pandas as pd
-iris = pd.read_csv('iris.csv', sep=',')
-v = iris.loc[iris['type']=='Iris-virginica', 'SepalLen':'PetalWid']
-print(v.var(ddof=0))  # 如果用df.var() 需要设置ddof为0
-
-## 或者还是用np.var(xx)做更方便
-import pandas as pd
-import numpy as np
-iris = pd.read_csv('iris.csv', sep=',')
-v = iris.loc[iris['type']=='Iris-virginica', 'SepalLen':'PetalWid']
-print(np.var(v)) 
-```
-
-### extreme points
-包括最大值和最小值
-``` python
-print(data.select_dtypes(exclude='object').min())
-print(dara.select_dtypes(exclude='object').max())
-```
-注意需要把前面的部分()起来  !!!!! 
-
-``` python
-ne = Nowcoder.loc[Nowcoder['Num_of_exercise']>10,'Num_of_exercise'] 
-ns = Nowcoder.loc[Nowcoder['Num_of_exercise']>10,'Number_of_submissions']
-max_c = (ne/ns).max()   # 计算结果的max 要把计算过程()  
-print(round(max_c,3))
-```
-
-### 几分位点
-df.quantile(xx) 
-``` python
-print(result.quantile([0.25, 0.50, 0.75]))    # 注意这里是0.50 此外 注意多个分位数在一起的写法 
-```
-
-### 众数
-.mode()
 
 
 ## (2) 获得每一列数据的特征
@@ -144,13 +29,7 @@ for i in types:
 ```
 ![image](https://user-images.githubusercontent.com/105503216/177712737-df38f549-a319-4f13-a09a-a89d1d284b71.png)  
 
-### 使用nunique()获取不重复值的数量 结果是int
-``` python
-Nowcoder = pd.read_csv('Nowcoder.csv', sep=',')
-language = Nowcoder['Language'].unique()
-count = Nowcoder['Language'].nunique()
-print(count, '\n', language)
-```
+
 
 ### 求某个categorical variable各value的占比!!数量！！！
 ``` python
