@@ -1,6 +1,6 @@
+# Chapter2 array
 
-# set/array 数组 （可变）
-## 构建赋值转化
+## 1. 构建赋值转化
 ``` python
 import numpy as np
 # 1维矩阵
@@ -22,7 +22,7 @@ range_array = np.arange(2, 5, 0.5)                                          # �
 np.arange(3)   --- 0，1，2
 ```
 
-### 随机生成
+### 1.1 随机生成
 data=np.random.randint(从xx数开始,到xx数不包括, size=(xx,xx))
 
 ``` python
@@ -36,6 +36,38 @@ data=np.random.randint(0,30, size=(2,5))
 ``` python
 df = pd.DataFrame(data=np.random.randint(0,100,size=(100,3)),columns=['A','B','C'])
 ```
+
+#### 1.1.2 随机生成满足标准正态分布的一组数
+
+1. 一个参数表示一行xx列  
+
+``` python
+import numpy as np
+array = np.random.randn(3)
+print(array)
+```
+
+<img width="336" alt="image" src="https://user-images.githubusercontent.com/105503216/193440067-f05a072b-09eb-4f38-a03c-f72d760faa35.png">  
+
+2. 两个参数表示 a行b列的矩阵  
+
+``` python
+import numpy as np
+array = np.random.randn(10, 2)
+print(array)
+```
+<img width="245" alt="image" src="https://user-images.githubusercontent.com/105503216/193440051-d1a882a2-5253-4ada-bcf4-3b1f8b5be52d.png">  
+
+3. 三个参数表示a个小矩阵汇成一个大矩阵 每一个小矩阵都是行为b列为c的  
+
+``` python
+import numpy as np
+array = np.random.randn(3,4,2)
+print(array)
+```
+
+<img width="271" alt="image" src="https://user-images.githubusercontent.com/105503216/193440113-51ed095a-61b2-42c4-b7cb-0a12fdaf0bb9.png">  
+
 
 #### 把0到xx-1的整数乱序排序
 
