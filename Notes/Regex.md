@@ -158,7 +158,7 @@ m = re.search(r"(\d+)\.(\d+)", "Price 1.69 Euro")
 print(m.group(0))  # '1.69'  entire match
 print(m.group(1))  # '1'     first group
 print(m.group(2))  # '69'    second group
-print(m.groups())  # ('1', '69')
+print(m.groups())  # ('1', '69') tuple of all captured parentheses
 ```
 
 You used this in your `_parse_valid_range()` function to extract day/month/year.
