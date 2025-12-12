@@ -1,13 +1,13 @@
 ## Boolean Filtering in Pandas
 
-### 🔹 Select rows where a column is **not None / NaN**
+### Select rows where a column is **not None / NaN**
 ```python
 df = df[df["current_price"].notna()]
 ```
 
 ---
 
-### 🔹 Multiple Conditions: `|` (OR) and `&` (AND)
+### Multiple Conditions: `|` (OR) and `&` (AND)
 
 ```python
 # Intersection of two conditions (AND): True only if both are True
@@ -41,7 +41,7 @@ is_skillful = (data_frame["educ"] > 9) | (data_frame["exper"] > 3)
 - Avoid using Python’s `and` / `or` with pandas Series — they’ll raise an error.
 ---
 
-### 🔹 “Not Equal To” Condition
+### “Not Equal To” Condition
 ```python
 not_female = data_frame["gender"] != "Female"
 ```

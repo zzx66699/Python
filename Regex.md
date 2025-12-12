@@ -1,6 +1,6 @@
 # 🧩 Python Regular Expressions (Regex) — Complete Guide with Examples
 
-## 0. Basics: The `re` module and raw strings
+## Basics: The `re` module and raw strings
 
 Import the module:
 
@@ -18,9 +18,9 @@ Raw strings prevent Python from interpreting `\n`, `\t`, etc. as escape sequence
 
 ---
 
-## 1. Common functions in the `re` module
+## Common functions in the `re` module
 
-### 1.1 `re.search(pattern, string, flags=0)`
+### `re.search(pattern, string, flags=0)`
 
 Searches for **the first match** anywhere in the string.
 

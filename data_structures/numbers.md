@@ -12,8 +12,14 @@ b = 2.0      # float
 result = a + b  # int is narrower than float, so a will be changed to float in the arithmetic
 print(result)  # output: 7.0
 ```
+## complex()
+```py
+z = complex(1, 2)   # 1 + 2j
+```
 
-## % - remainder
+## Arithmetic
+
+### % - Modulo
 a mod b 
 ``` python
 print (3 % 2)  
@@ -21,13 +27,33 @@ print (3 % 2)
 # 1
 ```
 
-## // - integer division
+### / - Division
+Division always returns a `float`, even if the result is a whole number
+```py
+6/2
+
+# 3.0
+```
+
+### // - Integer division / Floor division
 ``` python
 # If an int result is needed, you can use // to truncate the result.
 print (3//5, 3/5, sep="\n")
 
 # 0
 # 0.6
+```
+
+### ** - Exponentiation
+```py
+result = 2 ** 3
+print(result)  
+>>> 8
+
+
+result = 9 ** 0.5    # compute the square root
+print(result)  
+>>> 3
 ```
 
 ## round() - keep xx decicals
@@ -42,8 +68,11 @@ print(x)      # 0.3
 print(f"{x:.2}")   # 0.30
 ```
 
-## ** - pow
+## Convert from int to float
 ```py
-result = 2 ** 3
-print(result)  # 8
+>>> int(3.45)
+3
+
+>>> float(3)
+3.0
 ```

@@ -1,13 +1,12 @@
-# 🧭 Control Flow in Python
-
+# Conditions
 Control flow statements determine **how a program executes**.  
 They include conditional statements, loops, and loop control statements.
 
 ---
 
-## 1️⃣ Conditional Statements
+## Conditional Statements
 
-### 📘 `if / elif / else`
+###  if / elif / else
 
 ```python
 x = 10
@@ -27,11 +26,11 @@ else:
 
 ---
 
-## 2️⃣ Loops
+## Loops
 
 Python has two main types of loops: `for` and `while`.
 
-### 📘 `for` loop
+### `for` loop
 
 Used to iterate over a sequence (list, tuple, string, etc.)
 
@@ -40,15 +39,45 @@ for i in range(5):
     print("i =", i)
 ```
 
-### 📘 `while` loop
-
+### `while` ... `else` loop
 Runs as long as the condition is true.
+Once while end, run else.
 
 ```python
-count = 0
-while count < 5:
-    print("count =", count)
-    count += 1
+# Pig Latin
+# Rule 1: If a word begins with a vowel, or starts with "xr" or "yt", add an "ay" sound to the end of the word.
+# Rule 2: If a word begins with one or more consonants, first move those consonants to the end of the word and then add an "ay" sound to the end of the word.
+# Rule 3: If a word starts with zero or more consonants followed by "qu", first move those consonants (if any) and the "qu" part to the end of the word, and then add an "ay" sound to the end of the word.
+# Rule 4: If a word starts with one or more consonants followed by "y", first move the consonants preceding the "y"to the end of the word, and then add an "ay" sound to the end of the word.
+
+def translate(text):
+    words = text.split()
+    vowels = "aeiou"
+    result = []
+
+    for word in words:
+        w = word.lower()
+
+        if w[0] in vowels or w.startswith("xr") or w.startswith("yt"):
+            result.append(w + "ay")
+            continue
+        
+        i = 0
+        n = len(w)
+        while i < n and w[i] not in vowels:
+            if w[i:i+2] == "qu":
+                result.append(w[i+2:] + w[:i+2] + "ay")
+                break
+            if w[i] == "y" and i != 0:
+                result.append(w[i:] + w[:i] + "ay")
+                break
+            i += 1
+        else:
+            result.append(w[i:] + w[:i] + "ay") 
+    
+    return " ".join(result)
+    
+
 ```
 
 ---
